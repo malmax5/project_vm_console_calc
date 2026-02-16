@@ -10,7 +10,7 @@ static void printResult(const CalcContext* ctx)
     }
     else
     {
-        pritnf("%lld %c %lld = %lld\n", ctx->first, ctx->operation, ctx->second, ctx->result);
+        printf("%lld %c %lld = %lld\n", ctx->first, ctx->operation, ctx->second, ctx->result);
     }
 }
 
