@@ -6,10 +6,10 @@
 void parse(CalcContext* ctx, int argc, char** argv)
 {
     static struct option long_options[] = {
-        {"first", required_argument, 0, "a"},
-        {"second", required_argument, 0, "b"},
-        {"op", required_argument, 0, "o"},
-        {"help", no_argument, 0, "h"},
+        {"first", required_argument, 0, 'a'},
+        {"second", required_argument, 0, 'b'},
+        {"op", required_argument, 0, 'o'},
+        {"help", no_argument, 0, 'h'},
         {0, 0, 0, 0},
     };
 
