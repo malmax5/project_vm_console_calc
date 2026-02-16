@@ -24,6 +24,6 @@ struct CalcContext
 // TODO
 void run();
 void parse(CalcContext* ctx, int argc, char** argv);
-// void check(CalcContext* ctx,);
+void check(CalcContext* ctx);
 void calculate(CalcContext* ctx);
 // void print(CalcContext* ctx);
