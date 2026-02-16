@@ -1,6 +1,12 @@
-#include <cstdio>
+#include "calculator.hpp"
 
-int main()
+int g_argc;
+char** g_argv;
+
+int main(int argc, char** argv)
 {
-    printf("%s", "Hello World!");
+    g_argc = argc;
+    g_argv = argv;
+
+    return 0;
 }
