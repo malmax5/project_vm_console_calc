@@ -31,6 +31,9 @@ void parse(CalcContext* ctx, int argc, char** argv)
             case 'h':
                 ctx->appStatus = AppStatus::ERROR_HELP;
                 return;
+            default:
+                ctx->appStatus = AppStatus::ERROR_PARSE;
+                return;
         }
     }
 }
