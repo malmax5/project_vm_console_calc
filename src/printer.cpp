@@ -4,7 +4,7 @@
 
 static void printResult(const CalcContext* ctx)
 {
-    if (ctx->operation == "!")
+    if (ctx->operation == '!')
     {
         printf("%lld! = %lld\n", ctx->first, ctx->result);
     }
