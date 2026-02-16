@@ -8,17 +8,14 @@ void run()
     CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS};
 
     parse(&ctx, g_argc, g_argv);
-    if (ctx.appStatus == AppStatus::ERROR_HELP)
-    {
-        // TODO: implement print help func
-        return;
-    }
+    check(ctx);
 
-    // TODO: implement checker func
     if (ctx.appStatus == AppStatus::SUCCESS)
     {
         calculate(ctx);
     }
+
+    print(ctx);
 }
 
 void calculate(CalcContext* ctx);
