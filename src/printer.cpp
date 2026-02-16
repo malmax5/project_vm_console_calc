@@ -42,10 +42,10 @@ static void printMathStatus(const CalcContext* ctx)
     switch (ctx->mathStatus)
     {
     case pvm_math_lib::MathStatus::DIVISION_BY_ZERO:
-        printf("Error: Mathematical overflow.\n");
+        printf("Error: Division by zero.\n");
         break;
     case pvm_math_lib::MathStatus::OVERFLOW_ERROR:
-        printf("Error: Division by zero.\n");
+        printf("Error: Mathematical overflow.\n");
         break;
     case pvm_math_lib::MathStatus::INVALID_INPUT:
         printf("Error: Invalid argument for operation.\n");
