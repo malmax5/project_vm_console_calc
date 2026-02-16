@@ -8,17 +8,17 @@ void run()
     CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS};
 
     parse(&ctx, g_argc, g_argv);
-    check(ctx);
+    check(&ctx);
 
     if (ctx.appStatus == AppStatus::SUCCESS)
     {
-        calculate(ctx);
+        calculate(&ctx);
     }
 
-    print(ctx);
+    print(&ctx);
 }
 
-void calculate(CalcContext* ctx);
+void calculate(CalcContext* ctx)
 {
     switch(ctx->operation)
     {
@@ -38,7 +38,7 @@ void calculate(CalcContext* ctx);
             ctx->mathStatus = pvm_math_lib::pow(ctx->first, ctx->second, ctx->result);
             break;
         case '!':
-            ctx->mathStatus = pvm_math_lib::add(ctx->first, ctx->result);
+            ctx->mathStatus = pvm_math_lib::factorial(ctx->first, ctx->result);
             break;
         default:
             ctx->appStatus = AppStatus::ERROR_VALIDATION;
