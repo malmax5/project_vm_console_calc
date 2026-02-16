@@ -18,7 +18,7 @@ void run()
     print(&ctx);
 }
 
-void calculate(CalcContext* ctx);
+void calculate(CalcContext* ctx)
 {
     switch(ctx->operation)
     {
