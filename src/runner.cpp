@@ -38,7 +38,7 @@ void calculate(CalcContext* ctx)
             ctx->mathStatus = pvm_math_lib::pow(ctx->first, ctx->second, ctx->result);
             break;
         case '!':
-            ctx->mathStatus = pvm_math_lib::add(ctx->first, ctx->result);
+            ctx->mathStatus = pvm_math_lib::factorial(ctx->first, ctx->result);
             break;
         default:
             ctx->appStatus = AppStatus::ERROR_VALIDATION;
