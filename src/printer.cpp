@@ -14,7 +14,7 @@ static void printResult(const CalcContext* ctx)
     }
 }
 
-static printAppStatus(const CalcContext* ctx)
+static void printAppStatus(const CalcContext* ctx)
 {
     switch (ctx->appStatus)
     {
@@ -37,7 +37,7 @@ static printAppStatus(const CalcContext* ctx)
     }
 }
 
-static printMathStatus(const CalcContext* ctx)
+static void printMathStatus(const CalcContext* ctx)
 {
     switch (ctx->mathStatus)
     {
