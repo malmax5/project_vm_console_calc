@@ -8,14 +8,14 @@ void run()
     CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS};
 
     parse(&ctx, g_argc, g_argv);
-    check(ctx);
+    check(&ctx);
 
     if (ctx.appStatus == AppStatus::SUCCESS)
     {
-        calculate(ctx);
+        calculate(&ctx);
     }
 
-    print(ctx);
+    print(&ctx);
 }
 
 void calculate(CalcContext* ctx);
