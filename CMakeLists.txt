@@ -13,6 +13,10 @@ FetchContent_MakeAvailable(pvm_math_lib)
 
 add_executable(calculator
     src/main.cpp
+    src/checker.cpp
+    src/parser.cpp
+    src/printer.cpp
+    src/runner.cpp
 )
 
 target_include_directories(calculator PRIVATE include)
