@@ -26,7 +26,7 @@ void parse(CalcContext* ctx, int argc, char** argv)
                 ctx->second = atoll(optarg);
                 break;
             case 'o':
-                ctx->operation = optarg;
+                ctx->operation = optarg[0];
                 break;
             case 'h':
                 ctx->appStatus = AppStatus::ERROR_HELP;
