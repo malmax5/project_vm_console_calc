@@ -13,22 +13,10 @@ static AppStatus validateOperationAndOperands(const CalcContext* ctx)
     case '*':
         break;
     case '/':
-        if (ctx->second == 0)
-        {
-            retStatus = AppStatus::ERROR_VALIDATION;
-        }
         break;
     case '^':
-        if (ctx->second < 0)
-        {
-            retStatus = AppStatus::ERROR_VALIDATION;
-        }
         break;
     case '!':
-        if (ctx->first < 0)
-        {
-            retStatus = AppStatus::ERROR_VALIDATION;
-        }
         break;
     default:
         retStatus = AppStatus::ERROR_VALIDATION;
