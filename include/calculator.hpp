@@ -19,6 +19,7 @@ struct CalcContext
     long long result;
     pvm_math_lib::MathStatus mathStatus;
     AppStatus appStatus;
+    int argCountCheckMask;
 };
 
 void run(int argc, char **argv);
