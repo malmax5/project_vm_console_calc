@@ -71,6 +71,4 @@ void print(CalcContext *ctx)
     }
 
     printResult(ctx);
-
-    return;
 }

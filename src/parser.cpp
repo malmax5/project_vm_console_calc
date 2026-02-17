@@ -1,11 +1,11 @@
 #include "calculator.hpp"
 
 #include <getopt.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 void parse(CalcContext *ctx, int argc, char **argv)
 {
-    static struct option long_options[] = {
+    static struct option longOptions[] = {
         {"first", required_argument, 0, 'a'},
         {"second", required_argument, 0, 'b'},
         {"op", required_argument, 0, 'o'},
@@ -13,9 +13,9 @@ void parse(CalcContext *ctx, int argc, char **argv)
         {0, 0, 0, 0},
     };
 
-    int opt;
+    int opt = 0;
 
-    while ((opt = getopt_long(argc, argv, "a:b:o:h", long_options, nullptr)) != -1)
+    while ((opt = getopt_long(argc, argv, "a:b:o:h", longOptions, nullptr)) != -1)
     {
         switch (opt)
         {
