@@ -45,3 +45,9 @@ if(CLANG_FORMAT_EXE)
 else()
     message(WARNING "clang-format not found.")
 endif()
+
+include(GNUInstallDirs)
+install(TARGETS calculator
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
