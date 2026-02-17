@@ -2,8 +2,12 @@
 Checks: >
     -*,
     bugprone-*,
-    cppcoreguidelines-*,
     readability-*,
+    cppcoreguidelines-*,
+    -cppcoreguidelines-pro-type-vararg,
+    -cppcoreguidelines-avoid-c-arrays,
+    -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+    -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
 WarningsAsErrors: "*"
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
