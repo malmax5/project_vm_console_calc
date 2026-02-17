@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-static void printResult(const CalcContext* ctx)
+static void printResult(const CalcContext *ctx)
 {
     if (ctx->operation == '!')
     {
@@ -14,7 +14,7 @@ static void printResult(const CalcContext* ctx)
     }
 }
 
-static void printAppStatus(const CalcContext* ctx)
+static void printAppStatus(const CalcContext *ctx)
 {
     switch (ctx->appStatus)
     {
@@ -37,7 +37,7 @@ static void printAppStatus(const CalcContext* ctx)
     }
 }
 
-static void printMathStatus(const CalcContext* ctx)
+static void printMathStatus(const CalcContext *ctx)
 {
     switch (ctx->mathStatus)
     {
@@ -56,7 +56,7 @@ static void printMathStatus(const CalcContext* ctx)
     }
 }
 
-void print(CalcContext* ctx)
+void print(CalcContext *ctx)
 {
     if (ctx->appStatus != AppStatus::SUCCESS)
     {

@@ -1,6 +1,6 @@
 #include "calculator.hpp"
 
-static AppStatus validateOperationAndOperands(const CalcContext* ctx)
+static AppStatus validateOperationAndOperands(const CalcContext *ctx)
 {
     AppStatus retStatus = AppStatus::SUCCESS;
 
@@ -26,7 +26,7 @@ static AppStatus validateOperationAndOperands(const CalcContext* ctx)
     return retStatus;
 }
 
-void check(CalcContext* ctx)
+void check(CalcContext *ctx)
 {
     if (ctx->appStatus != AppStatus::SUCCESS)
     {

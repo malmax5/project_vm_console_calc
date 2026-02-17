@@ -1,7 +1,7 @@
 #include "calculator.hpp"
 
 extern int g_argc;
-extern char** g_argv;
+extern char **g_argv;
 
 void run()
 {
@@ -18,29 +18,29 @@ void run()
     print(&ctx);
 }
 
-void calculate(CalcContext* ctx)
+void calculate(CalcContext *ctx)
 {
-    switch(ctx->operation)
+    switch (ctx->operation)
     {
-        case '+':
-            ctx->mathStatus = pvm_math_lib::add(ctx->first, ctx->second, ctx->result);
-            break;
-        case '-':
-            ctx->mathStatus = pvm_math_lib::sub(ctx->first, ctx->second, ctx->result);
-            break;
-        case '*':
-            ctx->mathStatus = pvm_math_lib::mul(ctx->first, ctx->second, ctx->result);
-            break;
-        case '/':
-            ctx->mathStatus = pvm_math_lib::div(ctx->first, ctx->second, ctx->result);
-            break;
-        case '^':
-            ctx->mathStatus = pvm_math_lib::pow(ctx->first, ctx->second, ctx->result);
-            break;
-        case '!':
-            ctx->mathStatus = pvm_math_lib::factorial(ctx->first, ctx->result);
-            break;
-        default:
-            ctx->appStatus = AppStatus::ERROR_VALIDATION;
+    case '+':
+        ctx->mathStatus = pvm_math_lib::add(ctx->first, ctx->second, ctx->result);
+        break;
+    case '-':
+        ctx->mathStatus = pvm_math_lib::sub(ctx->first, ctx->second, ctx->result);
+        break;
+    case '*':
+        ctx->mathStatus = pvm_math_lib::mul(ctx->first, ctx->second, ctx->result);
+        break;
+    case '/':
+        ctx->mathStatus = pvm_math_lib::div(ctx->first, ctx->second, ctx->result);
+        break;
+    case '^':
+        ctx->mathStatus = pvm_math_lib::pow(ctx->first, ctx->second, ctx->result);
+        break;
+    case '!':
+        ctx->mathStatus = pvm_math_lib::factorial(ctx->first, ctx->result);
+        break;
+    default:
+        ctx->appStatus = AppStatus::ERROR_VALIDATION;
     }
 }

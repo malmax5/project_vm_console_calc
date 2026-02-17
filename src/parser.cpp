@@ -3,7 +3,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 
-void parse(CalcContext* ctx, int argc, char** argv)
+void parse(CalcContext *ctx, int argc, char **argv)
 {
     static struct option long_options[] = {
         {"first", required_argument, 0, 'a'},
@@ -17,24 +17,23 @@ void parse(CalcContext* ctx, int argc, char** argv)
 
     while ((opt = getopt_long(argc, argv, "a:b:o:h", long_options, nullptr)) != -1)
     {
-        switch(opt)
+        switch (opt)
         {
-            case 'a':
-                ctx->first = atoll(optarg);
-                break;
-            case 'b':
-                ctx->second = atoll(optarg);
-                break;
-            case 'o':
-                ctx->operation = optarg[0];
-                break;
-            case 'h':
-                ctx->appStatus = AppStatus::ERROR_HELP;
-                return;
-            default:
-                ctx->appStatus = AppStatus::ERROR_PARSE;
-                return;
+        case 'a':
+            ctx->first = atoll(optarg);
+            break;
+        case 'b':
+            ctx->second = atoll(optarg);
+            break;
+        case 'o':
+            ctx->operation = optarg[0];
+            break;
+        case 'h':
+            ctx->appStatus = AppStatus::ERROR_HELP;
+            return;
+        default:
+            ctx->appStatus = AppStatus::ERROR_PARSE;
+            return;
         }
     }
 }
-
