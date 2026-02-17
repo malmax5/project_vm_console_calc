@@ -1,13 +1,10 @@
 #include "calculator.hpp"
 
-extern int g_argc;
-extern char **g_argv;
-
-void run()
+void run(int argc, char** argv)
 {
     CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS};
 
-    parse(&ctx, g_argc, g_argv);
+    parse(&ctx, argc, argv);
     check(&ctx);
 
     if (ctx.appStatus == AppStatus::SUCCESS)
