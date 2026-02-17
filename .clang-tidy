@@ -7,4 +7,4 @@ Checks: >
 WarningsAsErrors: "*"
 CheckOptions:
     - key: readability-identifier-naming.VariableCase
-      value: camelCase
+      value: CamelCase
