@@ -1,10 +1,8 @@
 ---
-Checks: >
-    -*,
-    bugprone-*,
-    cppcoreguidelines-*,
-    readability-*,
-WarningsAsErrors: "*"
-CheckOptions:
-    - key readability-identifier-naming.VariableCase
-      value: camelCase
+Language: Cpp
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+IndentWidth: 4
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: None
+SortIncludes: true
