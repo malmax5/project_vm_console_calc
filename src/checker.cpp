@@ -34,7 +34,8 @@ void check(CalcContext *ctx)
         return;
     }
 
-    if ((ctx->appStatus = validateOperationAndOperands(ctx)) != AppStatus::SUCCESS)
+    ctx->appStatus = validateOperationAndOperands(ctx);
+    if (ctx->appStatus != AppStatus::SUCCESS)
     {
         return;
     }
