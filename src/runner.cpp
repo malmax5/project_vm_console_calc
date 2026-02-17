@@ -1,6 +1,6 @@
 #include "calculator.hpp"
 
-void run(int argc, char** argv)
+void run(int argc, char **argv)
 {
     CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS};
 

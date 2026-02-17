@@ -21,7 +21,7 @@ struct CalcContext
     AppStatus appStatus;
 };
 
-void run(int argc, char** argv);
+void run(int argc, char **argv);
 void parse(CalcContext *ctx, int argc, char **argv);
 void check(CalcContext *ctx);
 void calculate(CalcContext *ctx);

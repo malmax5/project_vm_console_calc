@@ -1,7 +1,7 @@
 #include "calculator.hpp"
 
-#include <getopt.h>
 #include <cstdlib>
+#include <getopt.h>
 
 void parse(CalcContext *ctx, int argc, char **argv)
 {
