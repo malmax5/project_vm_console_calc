@@ -1,0 +1,10 @@
+---
+Checks: >
+    -*,
+    bugprone-*,
+    cppcoreguidelines-*,
+    readability-*,
+WarningsAsErrors: "*"
+CheckOptions:
+    - key readability-identifier-naming.VariableCase
+      value: camelCase
