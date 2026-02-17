@@ -7,15 +7,10 @@ static AppStatus validateOperationAndOperands(const CalcContext *ctx)
     switch (ctx->operation)
     {
     case '+':
-        break;
     case '-':
-        break;
     case '*':
-        break;
     case '/':
-        break;
     case '^':
-        break;
     case '!':
         break;
     default:
