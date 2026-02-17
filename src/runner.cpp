@@ -2,7 +2,7 @@
 
 void run(int argc, char **argv)
 {
-    CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS};
+    CalcContext ctx = {0, 0, 0, 0, pvm_math_lib::MathStatus::OK, AppStatus::SUCCESS, 0};
 
     parse(&ctx, argc, argv);
     check(&ctx);

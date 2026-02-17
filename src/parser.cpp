@@ -21,9 +21,11 @@ void parse(CalcContext *ctx, int argc, char **argv)
         {
         case 'a':
             ctx->first = atoll(optarg);
+            ctx->argCountCheckMask |= 1;
             break;
         case 'b':
             ctx->second = atoll(optarg);
+            ctx->argCountCheckMask |= 2;
             break;
         case 'o':
             ctx->operation = optarg[0];

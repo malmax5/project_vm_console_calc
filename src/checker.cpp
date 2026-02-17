@@ -11,7 +11,16 @@ static AppStatus validateOperationAndOperands(const CalcContext *ctx)
     case '*':
     case '/':
     case '^':
+        if ((ctx->argCountCheckMask & 3) != 3)
+        {
+            retStatus = AppStatus::ERROR_VALIDATION;
+        }
+        break;
     case '!':
+        if ((ctx->argCountCheckMask & 1) == 0)
+        {
+            retStatus = AppStatus::ERROR_VALIDATION;
+        }
         break;
     default:
         retStatus = AppStatus::ERROR_VALIDATION;
