@@ -7,7 +7,7 @@ include(FetchContent)
 FetchContent_Declare(
     pvm_math_lib
     GIT_REPOSITORY https://github.com/malmax5/project_vm_math_lib
-    GIT_TAG dev
+    GIT_TAG feature/oop-refactoring
 )
 FetchContent_MakeAvailable(pvm_math_lib)
 
