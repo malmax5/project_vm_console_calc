@@ -4,12 +4,20 @@ project(ConsoleCalc LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
+
 FetchContent_Declare(
     pvm_math_lib
     GIT_REPOSITORY https://github.com/malmax5/project_vm_math_lib
     GIT_TAG feature/oop-refactoring
 )
-FetchContent_MakeAvailable(pvm_math_lib)
+
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.12.0
+)
+
+FetchContent_MakeAvailable(pvm_math_lib spdlog)
 
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
@@ -28,7 +36,7 @@ add_executable(calculator
 )
 
 target_include_directories(calculator PRIVATE include)
-target_link_libraries(calculator PRIVATE pvm_math_lib)
+target_link_libraries(calculator PRIVATE pvm_math_lib spdlog::spdlog)
 
 find_program(CLANG_FORMAT_EXE NAMES "clang-format")
 if(CLANG_FORMAT_EXE)
