@@ -54,7 +54,7 @@ Logger::Logger()
 
 Logger::~Logger()
 {
-    
+    spdlog::shutdown();
 }
 
 void Logger::debug(std::string_view message)
