@@ -16,4 +16,4 @@ public:
     virtual void error(std::string_view message) = 0;
 };
 
-}
+} // namespace app_calculator::logger
