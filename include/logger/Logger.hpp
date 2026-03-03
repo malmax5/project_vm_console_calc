@@ -25,10 +25,8 @@ class Logger : public ILogger
     Logger();
     ~Logger() override;
 
-  private:
     struct Impl;
 
-  private:
     std::unique_ptr<Impl> pimpl;
 };
 

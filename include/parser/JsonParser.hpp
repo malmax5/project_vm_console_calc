@@ -20,7 +20,6 @@ class JsonParser : public core::IParser
   private:
     struct Impl;
 
-  private:
     std::unique_ptr<Impl> pimpl;
 };
 
