@@ -12,16 +12,16 @@ public:
     using std::runtime_error::runtime_error;
 };
 
-class ParserExceptions: public AppException
+class ParserException: public AppException
 {
 public:
-    ParserExceptions()
+    ParserException()
         : AppException("App Error: Parser exception is occured.")
     {
 
     }
 
-    ParserExceptions(const std::string& msg)
+    ParserException(const std::string& msg)
         : AppException(msg)
     {
 
