@@ -4,6 +4,22 @@
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 
+namespace app_calculator::models
+{
+
+void to_json(nlohmann::json& j, const CalculationTask& task)
+{
+    j = nlohmann::json{{"operation", task.operation}, {"operands", task.operands}};
+}
+
+void from_json(nlohmann::json& j, CalculationTask& task)
+{
+    j.at("operation").get_to(task.operation);
+    j.at("operands").get_to(task.operands);
+}
+
+} // namespace app_calculator::models
+
 namespace app_calculator::parser
 {
 
