@@ -39,6 +39,8 @@ add_executable(calculator
     src/parser.cpp
     src/printer.cpp
     src/runner.cpp
+
+    src/parser/JsonParser.cpp
 )
 
 target_include_directories(calculator PRIVATE include)
