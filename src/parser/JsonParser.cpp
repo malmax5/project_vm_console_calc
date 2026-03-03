@@ -28,7 +28,7 @@ namespace app_calculator::parser
 struct JsonParser::Impl
 {
 public:
-    models::CalculationTask parseInternal(std::string_view inputData)
+    static models::CalculationTask parseInternal(std::string_view inputData)
     {
         try
         {
@@ -64,7 +64,7 @@ JsonParser::~JsonParser()
 
 models::CalculationTask JsonParser::parse(std::string_view inputData)
 {
-    return pimpl->parseInternal(inputData);
+    return Impl::parseInternal(inputData);
 }
 
 } // namespace app_calculator::parser
