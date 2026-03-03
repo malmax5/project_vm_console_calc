@@ -3,7 +3,7 @@
 #include "core/IParser.hpp"
 #include <memory>
 
-namespace app_calculator::pareser
+namespace app_calculator::parser
 {
 
 class JsonParser : public core::IParser
