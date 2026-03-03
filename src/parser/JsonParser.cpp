@@ -28,48 +28,26 @@ namespace app_calculator::parser
 struct JsonParser::Impl
 {
 public:
-    models::CalculationTask parseInternal(std::string_view input_data)
+    models::CalculationTask parseInternal(std::string_view inputData)
     {
         try
         {
-            nlohmann::json j = nlohmann::json::parse(input_data);
+            nlohmann::json jsonData = nlohmann::json::parse(inputData);
 
-            models::CalculationTask task;
-
-            if (j.contains("operations") && j["operations"].is_string())
-            {
-                task.operation = j.at("operations").get<std::string>();
-            }
-            else
-            {
-                throw exceptions::ParserException("JSON missing 'operation' field or it is no a string");
-            }
-
-            if (j.contains("operands") && j["operands"].is_array())
-            {
-                for (const auto& item : j.at("operands"))
-                {
-                    if (item.is_number_integer())
-                    {
-                        task.operands.push_back(item.get<long long>());
-                    }
-                    else
-                    {
-                        throw exceptions::ParserException("Operand is not an integer number");
-                    }
-                }
-            }
-            else
-            {
-                throw exceptions::ParserException("JSON missin 'operands' or it is not an array");
-            }
-
-            return task;
+            return jsonData.get<models::CalculationTask>();
         }
         catch(const nlohmann::json::parse_error& e)
         {
-            throw exceptions::ParserException(std::string("JSON Parse Error: ") + e.what());
-        }        
+            throw exceptions::ParserException("Synax error: " + std::string(e.what()));
+        }
+        catch(const nlohmann::json::type_error& e)
+        {
+            throw exceptions::ParserException("Type mismatch: " + std::string(e.what()));
+        }
+        catch(const nlohmann::json::out_of_range& e)
+        {
+            throw exceptions::ParserException("Missing required field: " + std::string(e.what()));
+        }
     }
 };
 
@@ -84,9 +62,9 @@ JsonParser::~JsonParser()
 
 }
 
-models::CalculationTask JsonParser::parse(std::string_view input_data)
+models::CalculationTask JsonParser::parse(std::string_view inputData)
 {
-    return pimpl->parseInternal(input_data);
+    return pimpl->parseInternal(inputData);
 }
 
 } // namespace app_calculator::parser
