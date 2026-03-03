@@ -7,15 +7,17 @@
 namespace app_calculator::models
 {
 
-void to_json(nlohmann::json& j, const CalculationTask& task)
+// NOLINTNEXTLINE(readability-identifier-naming)
+void to_json(nlohmann::json& jsonData, const CalculationTask& task)
 {
-    j = nlohmann::json{{"operation", task.operation}, {"operands", task.operands}};
+    jsonData = nlohmann::json{{"operation", task.operation}, {"operands", task.operands}};
 }
 
-void from_json(nlohmann::json& j, CalculationTask& task)
+// NOLINTNEXTLINE(readability-identifier-naming)
+void from_json(const nlohmann::json& jsonData, CalculationTask& task)
 {
-    j.at("operation").get_to(task.operation);
-    j.at("operands").get_to(task.operands);
+    jsonData.at("operation").get_to(task.operation);
+    jsonData.at("operands").get_to(task.operands);
 }
 
 } // namespace app_calculator::models
