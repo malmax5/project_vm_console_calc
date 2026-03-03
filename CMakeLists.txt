@@ -17,7 +17,13 @@ FetchContent_Declare(
     GIT_TAG v1.12.0
 )
 
-FetchContent_MakeAvailable(pvm_math_lib spdlog)
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+
+FetchContent_MakeAvailable(pvm_math_lib spdlog json)
 
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
@@ -36,7 +42,11 @@ add_executable(calculator
 )
 
 target_include_directories(calculator PRIVATE include)
-target_link_libraries(calculator PRIVATE pvm_math_lib spdlog::spdlog)
+target_link_libraries(calculator PRIVATE
+    pvm_math_lib
+    spdlog::spdlog
+    nlohmann_json::nlohmann_json
+)
 
 find_program(CLANG_FORMAT_EXE NAMES "clang-format")
 if(CLANG_FORMAT_EXE)
