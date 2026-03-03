@@ -16,28 +16,28 @@ public:
     {
         std::filesystem::create_directories("logs");
 
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::warn);
-        console_sink->set_pattern("[%^%l%$] %v");
+        auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        consoleSink->set_level(spdlog::level::warn);
+        consoleSink->set_pattern("[%^%l%$] %v");
 
-        auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+        auto fileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
             "logs/calculator.log",
             1024 * 1024 * 5,
             3
         );
-        file_sink->set_level(spdlog::level::trace);
-        file_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] %v");
+        fileSink->set_level(spdlog::level::trace);
+        fileSink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] %v");
 
-        spd_logger = std::make_shared<spdlog::logger>(
+        spdLogger = std::make_shared<spdlog::logger>(
             "multi_sink",
-            spdlog::sinks_init_list{console_sink, file_sink}
+            spdlog::sinks_init_list{consoleSink, fileSink}
         );
-        spd_logger->set_level(spdlog::level::trace);
-        spd_logger->flush_on(spdlog::level::err);
+        spdLogger->set_level(spdlog::level::trace);
+        spdLogger->flush_on(spdlog::level::err);
     }
 
 public:
-    std::shared_ptr<spdlog::logger> spd_logger;
+    std::shared_ptr<spdlog::logger> spdLogger;
 };
 
 Logger& Logger::instance()
@@ -59,22 +59,22 @@ Logger::~Logger()
 
 void Logger::debug(std::string_view message)
 {
-    pimpl->spd_logger->debug(message);
+    pimpl->spdLogger->debug(message);
 }
 
 void Logger::info(std::string_view message)
 {
-    pimpl->spd_logger->info(message);
+    pimpl->spdLogger->info(message);
 }
 
 void Logger::warn(std::string_view message)
 {
-    pimpl->spd_logger->warn(message);
+    pimpl->spdLogger->warn(message);
 }
 
 void Logger::error(std::string_view message)
 {
-    pimpl->spd_logger->error(message);
+    pimpl->spdLogger->error(message);
 }
 
 } // namespace app_calculator::logger
