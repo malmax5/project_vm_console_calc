@@ -40,6 +40,7 @@ add_executable(calculator
     src/printer.cpp
     src/runner.cpp
 
+    src/logger/Logger.cpp
     src/parser/JsonParser.cpp
 )
 
