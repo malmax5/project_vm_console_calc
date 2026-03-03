@@ -7,7 +7,7 @@ namespace app_calculator::logger
 
 class ILogger
 {
-public:
+  public:
     virtual ~ILogger() = default;
 
     virtual void debug(std::string_view message) = 0;

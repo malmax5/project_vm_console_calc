@@ -1,31 +1,27 @@
 #pragma once
 
-#include <string>
 #include <stdexcept>
+#include <string>
 
 namespace app_calculator::exceptions
 {
 
-class AppException: public std::runtime_error
+class AppException : public std::runtime_error
 {
-public:
+  public:
     using std::runtime_error::runtime_error;
 };
 
-class ParserException: public AppException
+class ParserException : public AppException
 {
-public:
-    ParserException()
-        : AppException("App Error: Parser exception is occured.")
+  public:
+    ParserException() : AppException("App Error: Parser exception is occured.")
     {
-
     }
 
-    ParserException(const std::string& msg)
-        : AppException(msg)
+    ParserException(const std::string &msg) : AppException(msg)
     {
-
     }
 };
 
-}
+} // namespace app_calculator::exceptions

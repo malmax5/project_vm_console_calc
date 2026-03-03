@@ -2,9 +2,9 @@
 
 #include <filesystem>
 
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 namespace app_calculator::logger
 {
@@ -16,11 +16,11 @@ constexpr std::size_t bytesInMb = static_cast<const std::size_t>(1024 * 1024);
 constexpr std::size_t maxLogFileSize = static_cast<const std::size_t>(5 * bytesInMb);
 constexpr std::size_t maxLogFiles = static_cast<const std::size_t>(3);
 
-}
+} // namespace
 
 struct Logger::Impl
 {
-public:
+  public:
     Impl()
     {
         std::filesystem::create_directories("logs");
@@ -30,17 +30,12 @@ public:
         consoleSink->set_pattern("[%^%l%$] %v");
 
         auto fileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-            "logs/calculator.log",
-            maxLogFileSize,
-            maxLogFiles
-        );
+            "logs/calculator.log", maxLogFileSize, maxLogFiles);
         fileSink->set_level(spdlog::level::trace);
         fileSink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] %v");
 
         spdLogger = std::make_shared<spdlog::logger>(
-            "multi_sink",
-            spdlog::sinks_init_list{consoleSink, fileSink}
-        );
+            "multi_sink", spdlog::sinks_init_list{consoleSink, fileSink});
         spdLogger->set_level(spdlog::level::trace);
         spdLogger->flush_on(spdlog::level::err);
     }
@@ -48,16 +43,14 @@ public:
     std::shared_ptr<spdlog::logger> spdLogger;
 };
 
-Logger& Logger::instance()
+Logger &Logger::instance()
 {
     static Logger inst;
     return inst;
 }
 
-Logger::Logger()
-    : pimpl(std::make_unique<Impl>())
+Logger::Logger() : pimpl(std::make_unique<Impl>())
 {
-
 }
 
 Logger::~Logger()

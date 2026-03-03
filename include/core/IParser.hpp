@@ -8,7 +8,7 @@ namespace app_calculator::core
 
 class IParser
 {
-public:
+  public:
     virtual ~IParser() = default;
 
     virtual models::CalculationTask parse(std::string_view inputData) = 0;

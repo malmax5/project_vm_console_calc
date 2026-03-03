@@ -8,7 +8,7 @@ namespace app_calculator::models
 
 struct CalculationTask
 {
-public:
+  public:
     std::string operation;
     std::vector<long long> operands;
 };

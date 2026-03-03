@@ -8,20 +8,20 @@ namespace app_calculator::parser
 
 class JsonParser : public core::IParser
 {
-public:
+  public:
     JsonParser();
     ~JsonParser() override;
 
-    JsonParser(const JsonParser&) = delete;
-    JsonParser& operator=(JsonParser&) = delete;
+    JsonParser(const JsonParser &) = delete;
+    JsonParser &operator=(JsonParser &) = delete;
 
     models::CalculationTask parse(std::string_view inputData) override;
 
-private:
+  private:
     struct Impl;
 
-private:
+  private:
     std::unique_ptr<Impl> pimpl;
 };
 
-}
+} // namespace app_calculator::parser
