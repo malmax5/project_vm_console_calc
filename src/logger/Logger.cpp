@@ -36,7 +36,6 @@ public:
         spdLogger->flush_on(spdlog::level::err);
     }
 
-public:
     std::shared_ptr<spdlog::logger> spdLogger;
 };
 
