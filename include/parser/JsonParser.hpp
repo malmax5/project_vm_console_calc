@@ -15,7 +15,7 @@ public:
     JsonParser(const JsonParser&) = delete;
     JsonParser& operator=(JsonParser&) = delete;
 
-    models::CalculationTask parse(std::string_view input_data) override;
+    models::CalculationTask parse(std::string_view inputData) override;
 
 private:
     struct Impl;
