@@ -2,7 +2,7 @@
 
 #include "models/CalculationTask.hpp"
 
-namespace app_calculator::calculator
+namespace app_calculator::core
 {
 
 class ICalculator
@@ -13,4 +13,4 @@ public:
     virtual long long calculate(const models::CalculationTask& task) = 0;
 };
 
-}
+} // namespace app_calculator::core
