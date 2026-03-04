@@ -11,15 +11,14 @@ namespace app_calculator::checker
 
 class Checker : public core::IChecker
 {
-public:
+  public:
     Checker();
     ~Checker() override;
 
-    void check(const models::CalculationTask& task) override;
+    void check(const models::CalculationTask &task) override;
 
-private:
+  private:
     std::set<models::OperationInfo> _operations;
 };
 
 } // namespace app_calculator::checker
-

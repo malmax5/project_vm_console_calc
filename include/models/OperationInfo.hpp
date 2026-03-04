@@ -11,7 +11,7 @@ struct OperationInfo
     std::string name;
     size_t expectedArgs;
 
-    bool operator<(const OperationInfo& other) const
+    bool operator<(const OperationInfo &other) const
     {
         return name < other.name;
     }
