@@ -43,7 +43,8 @@ class CalculationException : public AppException
     {
     }
 
-    explicit CalculationException(const std::string &msg) : AppException("Calculation Error: " + msg)
+    explicit CalculationException(const std::string &msg)
+        : AppException("Calculation Error: " + msg)
     {
     }
 };
