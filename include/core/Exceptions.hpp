@@ -19,7 +19,7 @@ class ParserException : public AppException
     {
     }
 
-    ParserException(const std::string &msg) : AppException(msg)
+    ParserException(const std::string &msg) : AppException("Parser Error" + msg)
     {
     }
 };
@@ -31,7 +31,7 @@ class ValidationException : public AppException
     {
     }
 
-    ValidationException(const std::string &msg) : AppException(msg)
+    ValidationException(const std::string &msg) : AppException("Validation Error: " + msg)
     {
     }
 };
