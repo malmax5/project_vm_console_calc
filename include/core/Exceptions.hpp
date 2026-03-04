@@ -24,4 +24,16 @@ class ParserException : public AppException
     }
 };
 
+class ValidationException : public AppException
+{
+  public:
+    ValidationException() : AppException("Validation Error: Unknown issue.")
+    {
+    }
+
+    ValidationException(const std::string &msg) : AppException(msg)
+    {
+    }
+};
+
 } // namespace app_calculator::exceptions
