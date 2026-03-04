@@ -43,6 +43,7 @@ add_executable(calculator
     src/logger/Logger.cpp
     src/parser/JsonParser.cpp
     src/checker/Checker.cpp
+    src/calculator/Calculator.cpp
 )
 
 target_include_directories(calculator PRIVATE include)
