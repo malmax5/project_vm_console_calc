@@ -16,17 +16,18 @@ Checker::~Checker()
 
 void Checker::check(const models::CalculationTask &task)
 {
-    auto it = _operations.find({task.operation, 0});
+    auto itOperation = _operations.find({task.operation, 0});
 
-    if (it == _operations.end())
+    if (itOperation == _operations.end())
     {
         throw exceptions::ValidationException("Unknown operation: " + task.operation);
     }
 
-    if (task.operands.size() < it->expectedArgs)
+    if (task.operands.size() < itOperation->expectedArgs)
     {
-        throw exceptions::ValidationException("Operation '" + it->name + "' requires at least " +
-                                              std::to_string(it->expectedArgs) + " operands");
+        throw exceptions::ValidationException(
+            "Operation '" + itOperation->name + "' requires at least " +
+            std::to_string(itOperation->expectedArgs) + " operands");
     }
 }
 
