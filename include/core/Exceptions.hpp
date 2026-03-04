@@ -15,7 +15,7 @@ class AppException : public std::runtime_error
 class ParserException : public AppException
 {
   public:
-    ParserException() : AppException("App Error: Parser exception is occured.")
+    ParserException() : AppException("Parser Error: Unknown issue.")
     {
     }
 
