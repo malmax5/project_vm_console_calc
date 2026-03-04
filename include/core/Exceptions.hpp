@@ -36,4 +36,16 @@ class ValidationException : public AppException
     }
 };
 
+class CalculationException : public AppException
+{
+  public:
+    CalculationException() : AppException("Calculation Error: Unknown issue.")
+    {
+    }
+
+    explicit CalculationException(const std::string &msg) : AppException("Calculation Error: " + msg)
+    {
+    }
+};
+
 } // namespace app_calculator::exceptions
