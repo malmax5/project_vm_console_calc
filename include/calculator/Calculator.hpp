@@ -12,6 +12,7 @@ namespace app_calculator::calculator
 class Calculator : public core::ICalculator
 {
   public:
+    Calculator();
     ~Calculator() override;
 
     long long calculate(const models::CalculationTask &task) override;
