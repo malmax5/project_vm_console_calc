@@ -7,7 +7,7 @@ namespace app_calculator::checker
 
 Checker::Checker()
 {
-    _operations = {{"sum", 2}, {"sub", 2}, {"mul", 2}, {"div", 2}, {"pow", 2}, {"fact", 2}};
+    _operations = {{"sum", 2}, {"sub", 2}, {"mul", 2}, {"div", 2}, {"pow", 2}, {"fact", 1}};
 }
 
 Checker::~Checker()
