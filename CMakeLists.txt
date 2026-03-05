@@ -35,11 +35,6 @@ endif()
 
 add_executable(calculator
     src/main.cpp
-    src/checker.cpp
-    src/parser.cpp
-    src/printer.cpp
-    src/runner.cpp
-
     src/logger/Logger.cpp
     src/parser/JsonParser.cpp
     src/checker/Checker.cpp
