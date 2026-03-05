@@ -50,7 +50,7 @@ long long Calculator::calculate(const models::CalculationTask &task)
     {
         throw exceptions::CalculationException("Math Error: Division by zero");
     }
-    catch (const pvm_math_lib::calculator_exceptions::CalculatorExceptionInvalidOperands& e)
+    catch (const pvm_math_lib::calculator_exceptions::CalculatorExceptionInvalidOperands &e)
     {
         throw exceptions::CalculationException(e.what());
     }
