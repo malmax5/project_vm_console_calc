@@ -19,6 +19,11 @@ class Runner : public core::IRunner
            std::unique_ptr<core::ICalculator> calculator, std::unique_ptr<core::IPrinter> printer);
     ~Runner() override;
 
+    Runner(const Runner &) = delete;
+    Runner &operator=(const Runner &) = delete;
+    Runner(Runner &&) noexcept = delete;
+    Runner &operator=(Runner &&) noexcept = delete;
+
     void run(std::string_view jsonInput) override;
 
   private:
