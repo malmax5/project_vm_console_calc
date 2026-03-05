@@ -66,11 +66,13 @@ if(BUILD_TESTING)
         tests/test_main.cpp
         tests/test_checker.cpp
         tests/test_parser.cpp
+        tests/test_calculator.cpp
     )
 
     target_include_directories(unit_tests PRIVATE include)
     target_link_libraries(unit_tests PRIVATE
         app_logic
+        pvm_math_lib
         GTest::gtest
     )
 
