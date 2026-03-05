@@ -6,7 +6,7 @@
 namespace app_calculator::logger
 {
 
-class Logger : public ILogger
+class Logger final : public ILogger
 {
   public:
     static Logger &instance();

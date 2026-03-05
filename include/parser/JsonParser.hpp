@@ -6,7 +6,7 @@
 namespace app_calculator::parser
 {
 
-class JsonParser : public core::IParser
+class JsonParser final : public core::IParser
 {
   public:
     JsonParser();

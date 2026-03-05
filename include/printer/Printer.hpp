@@ -8,7 +8,7 @@
 namespace app_calculator::printer
 {
 
-class Printer : public core::IPrinter
+class Printer final : public core::IPrinter
 {
   public:
     Printer();

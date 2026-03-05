@@ -9,7 +9,7 @@
 namespace app_calculator::calculator
 {
 
-class Calculator : public core::ICalculator
+class Calculator final : public core::ICalculator
 {
   public:
     Calculator();

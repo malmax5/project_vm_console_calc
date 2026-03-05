@@ -9,7 +9,7 @@
 namespace app_calculator::checker
 {
 
-class Checker : public core::IChecker
+class Checker final : public core::IChecker
 {
   public:
     Checker();

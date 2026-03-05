@@ -11,7 +11,7 @@
 namespace app_calculator::runner
 {
 
-class Runner : public core::IRunner
+class Runner final : public core::IRunner
 {
   public:
     Runner();
