@@ -14,6 +14,8 @@ class JsonParser : public core::IParser
 
     JsonParser(const JsonParser &) = delete;
     JsonParser &operator=(JsonParser &) = delete;
+    JsonParser(JsonParser &&) noexcept = default;
+    JsonParser &operator=(JsonParser &&) noexcept = default;
 
     models::CalculationTask parse(std::string_view inputData) override;
 
