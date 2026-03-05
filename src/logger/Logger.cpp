@@ -26,7 +26,7 @@ struct Logger::Impl
         std::filesystem::create_directories("logs");
 
         auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        consoleSink->set_level(spdlog::level::warn);
+        consoleSink->set_level(spdlog::level::trace);
         consoleSink->set_pattern("[%^%l%$] %v");
 
         auto fileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
