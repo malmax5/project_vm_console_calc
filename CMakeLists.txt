@@ -62,7 +62,10 @@ target_link_libraries(calculator PRIVATE app_logic)
 option(BUILD_TESTING "Build tests" ON)
 if(BUILD_TESTING)
     enable_testing()
-    add_executable(unit_tests tests/test_main.cpp)
+    add_executable(unit_tests
+        tests/test_main.cpp
+        tests/test_checker.cpp
+    )
 
     target_include_directories(unit_tests PRIVATE include)
     target_link_libraries(unit_tests PRIVATE
