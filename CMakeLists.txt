@@ -65,6 +65,7 @@ if(BUILD_TESTING)
     add_executable(unit_tests
         tests/test_main.cpp
         tests/test_checker.cpp
+        tests/test_parser.cpp
     )
 
     target_include_directories(unit_tests PRIVATE include)
