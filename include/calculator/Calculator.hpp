@@ -15,6 +15,11 @@ class Calculator : public core::ICalculator
     Calculator();
     ~Calculator() override;
 
+    Calculator(const Calculator &) = delete;
+    Calculator &operator=(Calculator &) = delete;
+    Calculator(Calculator &&) noexcept = default;
+    Calculator &operator=(Calculator &&) noexcept = default;
+
     long long calculate(const models::CalculationTask &task) override;
 
   private:
