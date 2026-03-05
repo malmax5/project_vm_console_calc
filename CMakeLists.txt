@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(ConsoleCalc LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
@@ -53,10 +54,22 @@ target_link_libraries(calculator PRIVATE app_logic)
 
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
-set_target_properties(calculator PROPERTIES 
-    CXX_CLANG_TIDY "${CLANG_TIDY_EXE};--header-filter=${CMAKE_CURRENT_SOURCE_DIR}/.*;-config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
+    set(CLANG_TIDY_ARGS 
+        "${CLANG_TIDY_EXE}"
+        "--config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
+        "--header-filter=${CMAKE_CURRENT_SOURCE_DIR}/(include|src)/.*"
+        "--extra-arg=-Wno-unknown-warning-option"
     )
-    message(STATUS "clang-tidy found.")
+
+    set_target_properties(calculator PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_ARGS}")
+    
+    set_target_properties(app_logic PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_ARGS}")
+
+    if(TARGET unit_tests)
+        set_target_properties(unit_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_ARGS}")
+    endif()
+
+    message(STATUS "clang-tidy found and configured for all targets.")
 else()
     message(WARNING "clang-tidy not found.")
 endif()
