@@ -14,9 +14,9 @@ class Printer : public core::IPrinter
     Printer();
     ~Printer() override;
 
-    void print_result(long long result) const override;
-    void print_error(std::string_view message) const override;
-    void print_info(std::string_view message) const override;
+    void printResult(long long result) const override;
+    void printError(std::string_view message) const override;
+    void printInfo(std::string_view message) const override;
 
   private:
     logger::ILogger &_logger;

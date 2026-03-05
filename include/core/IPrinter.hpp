@@ -16,9 +16,9 @@ class IPrinter
     IPrinter(IPrinter &&) noexcept = delete;
     IPrinter &operator=(IPrinter &&) noexcept = delete;
 
-    virtual void print_result(long long result) const = 0;
-    virtual void print_error(std::string_view message) const = 0;
-    virtual void print_info(std::string_view message) const = 0;
+    virtual void printResult(long long result) const = 0;
+    virtual void printError(std::string_view message) const = 0;
+    virtual void printInfo(std::string_view message) const = 0;
 };
 
 } // namespace app_calculator::core

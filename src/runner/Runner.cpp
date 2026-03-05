@@ -33,7 +33,7 @@ void Runner::run(std::string_view jsonInput)
 {
     try
     {
-        _printer->print_info("Starting calculation task...");
+        _printer->printInfo("Starting calculation task...");
 
         auto task = _parser->parse(jsonInput);
 
@@ -41,15 +41,15 @@ void Runner::run(std::string_view jsonInput)
 
         long long result = _calculator->calculate(task);
 
-        _printer->print_result(result);
+        _printer->printResult(result);
     }
     catch (const exceptions::AppException &e)
     {
-        _printer->print_error(e.what());
+        _printer->printError(e.what());
     }
     catch (const std::exception &e)
     {
-        _printer->print_error("Unexpected system error: " + std::string(e.what()));
+        _printer->printError("Unexpected system error: " + std::string(e.what()));
     }
 }
 

@@ -15,17 +15,17 @@ Printer::~Printer()
 {
 }
 
-void Printer::print_result(long long result) const
+void Printer::printResult(long long result) const
 {
     _logger.info("Calculation Result: " + std::to_string(result));
 }
 
-void Printer::print_error(std::string_view message) const
+void Printer::printError(std::string_view message) const
 {
     _logger.error(message);
 }
 
-void Printer::print_info(std::string_view message) const
+void Printer::printInfo(std::string_view message) const
 {
     _logger.debug(message);
 }
