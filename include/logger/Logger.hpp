@@ -11,10 +11,12 @@ class Logger : public ILogger
   public:
     static Logger &instance();
 
+    ~Logger() override;
+
     Logger(const Logger &) = delete;
     Logger &operator=(const Logger &) = delete;
-    Logger(Logger &&) noexcept = delete;
-    Logger &operator=(Logger &&) noexcept = delete;
+    Logger(Logger &&) noexcept = default;
+    Logger &operator=(Logger &&) noexcept = default;
 
     void debug(std::string_view message) override;
     void info(std::string_view message) override;
@@ -23,7 +25,6 @@ class Logger : public ILogger
 
   private:
     Logger();
-    ~Logger() override;
 
     struct Impl;
 
