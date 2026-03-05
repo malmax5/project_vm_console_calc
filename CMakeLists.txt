@@ -54,7 +54,7 @@ target_link_libraries(calculator PRIVATE app_logic)
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
 set_target_properties(calculator PROPERTIES 
-    CXX_CLANG_TIDY "${CLANG_TIDY_EXE};-config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
+    CXX_CLANG_TIDY "${CLANG_TIDY_EXE};--header-filter=${CMAKE_CURRENT_SOURCE_DIR}/.*;-config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
     )
     message(STATUS "clang-tidy found.")
 else()
