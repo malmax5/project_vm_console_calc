@@ -31,14 +31,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(pvm_math_lib spdlog json googletest)
 
-find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
-if(CLANG_TIDY_EXE)
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE};-config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy")
-    message(STATUS "clang-tidy found.")
-else()
-    message(WARNING "clang-tidy not found.")
-endif()
-
 add_library(app_logic STATIC
     src/logger/Logger.cpp
     src/parser/JsonParser.cpp
@@ -58,6 +50,16 @@ target_link_libraries(app_logic PRIVATE
 add_executable(calculator src/main.cpp)
 target_include_directories(calculator PRIVATE include)
 target_link_libraries(calculator PRIVATE app_logic)
+
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+if(CLANG_TIDY_EXE)
+set_target_properties(calculator PROPERTIES 
+    CXX_CLANG_TIDY "${CLANG_TIDY_EXE};-config-file=${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy"
+    )
+    message(STATUS "clang-tidy found.")
+else()
+    message(WARNING "clang-tidy not found.")
+endif()
 
 option(BUILD_TESTING "Build tests" ON)
 if(BUILD_TESTING)
@@ -88,10 +90,12 @@ if(CLANG_FORMAT_EXE)
         "tests/*.cpp"
     )
 
-    add_custom_target(format
-        COMMAND ${CLANG_FORMAT_EXE} -i -style=file ${ALL_SOURCE_FILES}
-        COMMENT "Formatting code with clang-format..."
-    )
+    if (NOT TARGET format)
+        add_custom_target(format
+            COMMAND ${CLANG_FORMAT_EXE} -i -style=file ${ALL_SOURCE_FILES}
+            COMMENT "Formatting code with clang-format..."
+        )
+    endif()
     message(STATUS "clang-format found.")
 else()
     message(WARNING "clang-format not found.")
