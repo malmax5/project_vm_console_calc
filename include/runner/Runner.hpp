@@ -21,8 +21,8 @@ class Runner : public core::IRunner
 
     Runner(const Runner &) = delete;
     Runner &operator=(const Runner &) = delete;
-    Runner(Runner &&) noexcept = delete;
-    Runner &operator=(Runner &&) noexcept = delete;
+    Runner(Runner &&) noexcept = default;
+    Runner &operator=(Runner &&) noexcept = default;
 
     void run(std::string_view jsonInput) override;
 
