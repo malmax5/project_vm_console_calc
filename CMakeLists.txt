@@ -45,6 +45,7 @@ add_executable(calculator
     src/checker/Checker.cpp
     src/calculator/Calculator.cpp
     src/printer/Printer.cpp
+    src/runner/Runner.cpp
 )
 
 target_include_directories(calculator PRIVATE include)
