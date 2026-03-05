@@ -14,6 +14,11 @@ class Printer : public core::IPrinter
     Printer();
     ~Printer() override;
 
+    Printer(const Printer &) = delete;
+    Printer &operator=(Printer &) = delete;
+    Printer(Printer &&) noexcept = delete;
+    Printer &operator=(Printer &&) noexcept = delete;
+
     void printResult(long long result) const override;
     void printError(std::string_view message) const override;
     void printInfo(std::string_view message) const override;
