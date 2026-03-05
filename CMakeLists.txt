@@ -103,8 +103,8 @@ if(CLANG_FORMAT_EXE)
         "tests/*.cpp"
     )
 
-    if (NOT TARGET format)
-        add_custom_target(format
+    if (NOT TARGET format_app)
+        add_custom_target(format_app
             COMMAND ${CLANG_FORMAT_EXE} -i -style=file ${ALL_SOURCE_FILES}
             COMMENT "Formatting code with clang-format..."
         )
