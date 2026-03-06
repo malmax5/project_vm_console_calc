@@ -9,18 +9,13 @@
 namespace app_calculator::logger
 {
 
-namespace
-{
-
-constexpr std::size_t bytesInMb = static_cast<const std::size_t>(1024 * 1024);
-constexpr std::size_t maxLogFileSize = static_cast<const std::size_t>(5 * bytesInMb);
-constexpr std::size_t maxLogFiles = static_cast<const std::size_t>(3);
-
-} // namespace
-
 struct Logger::Impl
 {
   public:
+    static constexpr std::size_t bytesInMb = static_cast<const std::size_t>(1024 * 1024);
+    static constexpr std::size_t maxLogFileSize = static_cast<const std::size_t>(5 * bytesInMb);
+    static constexpr std::size_t maxLogFiles = static_cast<const std::size_t>(3);
+
     Impl()
     {
         std::filesystem::create_directories("logs");
