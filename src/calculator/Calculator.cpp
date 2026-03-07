@@ -1,6 +1,7 @@
 #include "calculator/Calculator.hpp"
 
 #include "core/Exceptions.hpp"
+#include "models/Operations.hpp"
 
 namespace app_calculator::calculator
 {
@@ -17,27 +18,27 @@ long long Calculator::calculate(const models::CalculationTask &task)
 {
     try
     {
-        if (task.operation == "sum")
+        if (task.operation == models::operations::sum)
         {
             return _mathLib->add(task.operands.at(0), task.operands.at(1));
         }
-        if (task.operation == "sub")
+        if (task.operation == models::operations::sub)
         {
             return _mathLib->sub(task.operands.at(0), task.operands.at(1));
         }
-        if (task.operation == "mul")
+        if (task.operation == models::operations::mul)
         {
             return _mathLib->mul(task.operands.at(0), task.operands.at(1));
         }
-        if (task.operation == "div")
+        if (task.operation == models::operations::div)
         {
             return _mathLib->div(task.operands.at(0), task.operands.at(1));
         }
-        if (task.operation == "pow")
+        if (task.operation == models::operations::pow)
         {
             return _mathLib->pow(task.operands.at(0), task.operands.at(1));
         }
-        if (task.operation == "fact")
+        if (task.operation == models::operations::fact)
         {
             return _mathLib->factorial(task.operands.at(0));
         }
