@@ -10,19 +10,8 @@ int main(int argc, char **argv)
 
     try
     {
-        auto &logger = logger::Logger::instance();
-
         runner::Runner app;
-
-        if (argc > 1)
-        {
-            app.run(argv[1]);
-        }
-        else
-        {
-            logger.warn("No arguments provided. Please provide argument as JSON with 'operation': "
-                        "'op' and 'operands': [fields].");
-        }
+        app.run(argc, argv);
     }
     catch (const std::exception &e)
     {
