@@ -18,6 +18,7 @@ class IPrinter
 
     virtual void printResult(long long result) const = 0;
     virtual void printError(std::string_view message) const = 0;
+    virtual void printWarn(std::string_view message) const = 0;
     virtual void printInfo(std::string_view message) const = 0;
 };
 

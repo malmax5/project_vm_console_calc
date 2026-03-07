@@ -29,6 +29,11 @@ void Printer::printError(std::string_view message) const
     _logger->error(message);
 }
 
+void Printer::printWarn(std::string_view message) const
+{
+    _logger->warn(message);
+}
+
 void Printer::printInfo(std::string_view message) const
 {
     _logger->debug(message);

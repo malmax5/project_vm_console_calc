@@ -22,6 +22,7 @@ class Printer final : public core::IPrinter
 
     void printResult(long long result) const override;
     void printError(std::string_view message) const override;
+    void printWarn(std::string_view message) const override;
     void printInfo(std::string_view message) const override;
 
   private:
