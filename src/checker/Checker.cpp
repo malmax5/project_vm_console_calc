@@ -26,7 +26,7 @@ void Checker::check(const models::CalculationTask &task)
     if (task.operands.size() < itOperation->expectedArgs)
     {
         throw exceptions::ValidationException(
-            "Operation '" + itOperation->name + "' requires at least " +
+            "Operation '" + std::string(itOperation->name) + "' requires at least " +
             std::to_string(itOperation->expectedArgs) + " operands");
     }
 }
