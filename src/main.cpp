@@ -1,31 +1,38 @@
+#include "logger/Logger.hpp"
 #include "runner/Runner.hpp"
 
+#include <exception>
 #include <iostream>
-#include <string>
 
 int main(int argc, char **argv)
 {
     using namespace app_calculator;
-    runner::Runner app;
 
-    if (argc > 1)
+    try
     {
-        app.run(argv[1]);
-        return 0;
+        auto &logger = logger::Logger::instance();
+
+        runner::Runner app;
+
+        if (argc > 1)
+        {
+            app.run(argv[1]);
+        }
+        else
+        {
+            logger.warn("No arguments provided. Please provide argument as JSON with 'operation': "
+                        "'op' and 'operands': [fields].");
+        }
     }
-
-    std::cout << "Enter JSON task: ";
-    std::string input;
-    std::string line;
-
-    while (std::getline(std::cin, line))
+    catch (const std::exception &e)
     {
-        input += line;
+        std::cerr << "Critical Error: " << e.what();
+        return 1;
     }
-
-    if (!input.empty())
+    catch (...)
     {
-        app.run(input);
+        std::cerr << "Critical Error: Unknown Error occured.";
+        return 1;
     }
 
     return 0;
