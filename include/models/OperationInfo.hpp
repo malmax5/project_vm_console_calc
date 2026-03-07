@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string_view>
 
 namespace app_calculator::models
 {
@@ -8,7 +8,7 @@ namespace app_calculator::models
 struct OperationInfo
 {
   public:
-    std::string name;
+    std::string_view name;
     size_t expectedArgs;
 
     bool operator<(const OperationInfo &other) const
