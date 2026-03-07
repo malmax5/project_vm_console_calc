@@ -6,6 +6,8 @@
 #include "parser/JsonParser.hpp"
 #include "printer/Printer.hpp"
 
+#include "string_view"
+
 namespace app_calculator::runner
 {
 
@@ -29,8 +31,16 @@ Runner::~Runner()
 {
 }
 
-void Runner::run(std::string_view jsonInput)
+void Runner::run(int argc, char **argv)
 {
+    if (argc <= 1)
+    {
+        _printer->printWarn("No arguments provided.");
+        return;
+    }
+
+    std::string_view jsonInput = argv[1];
+
     try
     {
         _printer->printInfo("Starting calculation task...");

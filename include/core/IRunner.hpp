@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string_view>
-
 namespace app_calculator::core
 {
 
@@ -16,7 +14,7 @@ class IRunner
     IRunner(IRunner &&) noexcept = delete;
     IRunner &operator=(IRunner &&) noexcept = delete;
 
-    virtual void run(std::string_view jsonInput) = 0;
+    virtual void run(int argc, char **argv) = 0;
 };
 
 } // namespace app_calculator::core

@@ -24,7 +24,7 @@ class Runner final : public core::IRunner
     Runner(Runner &&) noexcept = default;
     Runner &operator=(Runner &&) noexcept = default;
 
-    void run(std::string_view jsonInput) override;
+    void run(int argc, char **argv) override;
 
   private:
     std::unique_ptr<core::IParser> _parser;
