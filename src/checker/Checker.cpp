@@ -1,13 +1,13 @@
 #include "checker/Checker.hpp"
 
 #include "core/Exceptions.hpp"
+#include "models/Operations.hpp"
 
 namespace app_calculator::checker
 {
 
 Checker::Checker()
 {
-    _operations = {{"sum", 2}, {"sub", 2}, {"mul", 2}, {"div", 2}, {"pow", 2}, {"fact", 1}};
 }
 
 Checker::~Checker()
@@ -16,9 +16,9 @@ Checker::~Checker()
 
 void Checker::check(const models::CalculationTask &task)
 {
-    auto itOperation = _operations.find({task.operation, 0});
+    auto itOperation = models::operations::operationsInfo.find({task.operation, 0});
 
-    if (itOperation == _operations.end())
+    if (itOperation == models::operations::operationsInfo.end())
     {
         throw exceptions::ValidationException("Unknown operation: " + task.operation);
     }

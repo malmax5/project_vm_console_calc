@@ -16,9 +16,6 @@ class Checker : public core::IChecker
     ~Checker() override;
 
     void check(const models::CalculationTask &task) override;
-
-  private:
-    std::set<models::OperationInfo> _operations;
 };
 
 } // namespace app_calculator::checker
