@@ -21,9 +21,6 @@ class Checker final : public core::IChecker
     Checker &operator=(Checker &&) noexcept = default;
 
     void check(const models::CalculationTask &task) override;
-
-  private:
-    std::set<models::OperationInfo> _operations;
 };
 
 } // namespace app_calculator::checker
