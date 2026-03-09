@@ -4,7 +4,7 @@
 
 ### Возможности:
 1. Числа могут быть только целые
-2. Доступные операции: + - * / ^ !
+2. Доступные операции: sum sub mul div pow fact
 
 ### Сборка
 ```bash
@@ -14,15 +14,5 @@ sudo cmake --build build --target install
 ```
 ### Использование
 ```bash
-# Для + - * /
-calculator --first [num] --second [num] --op [operation]
-
-# Для ^
-calculator --first [num] --second [exp] --op ^
-
-# Для !
-calculator --first [num] --op !
-
-# Получить информацию
-calculator --help
+calculator '{"operation": "[operation]", "operands": [operands]}'
 ```
