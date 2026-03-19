@@ -16,7 +16,7 @@ class Checker final : public core::IChecker
     ~Checker() override;
 
     Checker(const Checker &) = default;
-    Checker &operator=(Checker &) = default;
+    Checker &operator=(const Checker &) = default;
     Checker(Checker &&) noexcept = default;
     Checker &operator=(Checker &&) noexcept = default;
 

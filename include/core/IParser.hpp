@@ -14,8 +14,8 @@ class IParser
 
     IParser(const IParser &) = delete;
     IParser &operator=(const IParser &) = delete;
-    IParser(IParser &&) noexcept = delete;
-    IParser &operator=(IParser &&) noexcept = delete;
+    IParser(IParser &&) noexcept = default;
+    IParser &operator=(IParser &&) noexcept = default;
 
     virtual models::CalculationTask parse(std::string_view inputData) = 0;
 };

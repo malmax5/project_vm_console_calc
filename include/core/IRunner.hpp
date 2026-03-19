@@ -11,8 +11,8 @@ class IRunner
 
     IRunner(const IRunner &) = delete;
     IRunner &operator=(const IRunner &) = delete;
-    IRunner(IRunner &&) noexcept = delete;
-    IRunner &operator=(IRunner &&) noexcept = delete;
+    IRunner(IRunner &&) noexcept = default;
+    IRunner &operator=(IRunner &&) noexcept = default;
 
     virtual void run(int argc, char **argv) = 0;
 };
