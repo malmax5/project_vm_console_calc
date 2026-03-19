@@ -10,8 +10,10 @@ namespace app_calculator::models
 struct DbConfig
 {
   public:
+    static constexpr int defaultPostgresPort = 5432;
+
     std::string host;
-    int port;
+    int port{defaultPostgresPort};
     std::string dbname;
     std::string user;
     std::string password;
