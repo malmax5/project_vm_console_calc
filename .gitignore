@@ -3,6 +3,8 @@ bin/
 lib/
 logs/
 
+config/config.json
+
 *.o
 *.obj
 *.a
