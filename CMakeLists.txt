@@ -39,6 +39,7 @@ add_library(app_logic STATIC
     src/calculator/Calculator.cpp
     src/printer/Printer.cpp
     src/runner/Runner.cpp
+    src/models/DbConfig.cpp
 )
 
 target_include_directories(app_logic PRIVATE include)
