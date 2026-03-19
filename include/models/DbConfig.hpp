@@ -1,0 +1,32 @@
+#pragma once
+
+#include <string>
+
+#include <nlohmann/json_fwd.hpp>
+
+namespace app_calculator::models
+{
+
+struct DbConfig
+{
+  public:
+    std::string host;
+    int port;
+    std::string dbname;
+    std::string user;
+    std::string password;
+
+    std::string connectionString() const
+    {
+        return "host=" + host + " port=" + std::to_string(port) + " dbname=" + dbname +
+               " name=" + user + "password=" + password;
+    }
+};
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+void to_json(nlohmann::json &jsonData, const DbConfig &dbConfig);
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+void from_json(const nlohmann::json &jsonData, DbConfig &dbConfig);
+
+} // namespace app_calculator::models
