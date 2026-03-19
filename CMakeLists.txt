@@ -40,6 +40,7 @@ add_library(app_logic STATIC
     src/printer/Printer.cpp
     src/runner/Runner.cpp
     src/models/DbConfig.cpp
+    src/infrastructure/ConfigLoader.cpp
 )
 
 target_include_directories(app_logic PRIVATE include)
