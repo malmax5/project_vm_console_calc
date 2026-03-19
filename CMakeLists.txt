@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 
+find_package(PostgreSQL REQUIRED)
+
 FetchContent_Declare(
     pvm_math_lib
     GIT_REPOSITORY https://github.com/malmax5/project_vm_math_lib
@@ -43,11 +45,15 @@ add_library(app_logic STATIC
     src/infrastructure/ConfigLoader.cpp
 )
 
-target_include_directories(app_logic PRIVATE include)
+target_include_directories(app_logic PRIVATE
+    include
+    ${PostgreSQL_INCLUDE_DIRS}
+)
 target_link_libraries(app_logic PRIVATE
     pvm_math_lib
     spdlog::spdlog
     nlohmann_json::nlohmann_json
+    PostgreSQL::PostgreSQL
 )
 
 add_executable(calculator src/main.cpp)
