@@ -11,6 +11,12 @@ class PostgresConnection final : public core::IDbConnection<DbResult>
 {
   public:
     explicit PostgresConnection(const std::string &connInfo);
+    ~PostgresConnection() override = default;
+
+    PostgresConnection(const PostgresConnection &) = delete;
+    PostgresConnection &operator=(PostgresConnection &) = delete;
+    PostgresConnection(PostgresConnection &&) noexcept = default;
+    PostgresConnection &operator=(PostgresConnection &&) noexcept = default;
 
     DbResult execute(const std::string &query) override;
     bool isConnected() const override;
@@ -18,7 +24,7 @@ class PostgresConnection final : public core::IDbConnection<DbResult>
   private:
     struct PgConnDeleter
     {
-        void operator()(PGConn *conn) const
+        void operator()(PGconn *conn) const
         {
             if (conn != nullptr)
             {
@@ -26,6 +32,8 @@ class PostgresConnection final : public core::IDbConnection<DbResult>
             }
         }
     };
+
+    void checkConnection() const;
 
     std::unique_ptr<PGconn, PgConnDeleter> _connection;
 };
