@@ -51,11 +51,14 @@ add_library(app_logic STATIC
     src/infrastructure/ConfigLoader.cpp
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
-    src/database/repositories/DbRepository.cpp
+    src/database/repositories/HistoryRepository.cpp
 )
 
-target_include_directories(app_logic PRIVATE
+target_include_directories(app_logic PUBLIC
     include
+    ${PostgreSQL_INCLUDE_DIRS}
+)
+target_include_directories(app_logic PRIVATE
     ${PostgreSQL_INCLUDE_DIRS}
 )
 target_link_libraries(app_logic PRIVATE
