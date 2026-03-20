@@ -18,7 +18,10 @@ template <typename TResult> class DbRepository
     DbRepository &operator=(DbRepository &&) noexcept = default;
 
   protected:
-    auto &getDbConnection() const;
+    auto &getDbConnection() const
+    {
+        return *_dbConnection;
+    }
 
   private:
     std::shared_ptr<core::IDbConnection<TResult>> _dbConnection;
