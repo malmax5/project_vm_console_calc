@@ -45,6 +45,7 @@ add_library(app_logic STATIC
     src/infrastructure/ConfigLoader.cpp
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
+    src/database/repositories/DbRepository.cpp
 )
 
 target_include_directories(app_logic PRIVATE
