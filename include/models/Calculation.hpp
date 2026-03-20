@@ -9,21 +9,21 @@ namespace app_calculator::models
 
 enum class OperationStatus : int
 {
-    SUCCESS = 0,
-    DIVISION_BY_ZERO = 1,
-    OVERFLOW = 2,
-    INVALID_OPERANDS = 3,
-    UNKNOWN_ERROR = 4
+    success = 0,
+    divisionByZero = 1,
+    overflow = 2,
+    invalidOperands = 3,
+    unknownError = 4
 };
 
 struct Calculation
 {
-public:
-    int64_t operandA;
-    std::optional<int64_t> operandB;
+  public:
+    int64_t operandA{0};
+    std::optional<int64_t> operandB{std::nullopt};
     std::string operation;
-    std::optional<int64_t> result;
-    OperationStatus status;
+    std::optional<int64_t> result{std::nullopt};
+    OperationStatus status{OperationStatus::unknownError};
     std::string createdAt;
 };
 
