@@ -43,6 +43,7 @@ add_library(app_logic STATIC
     src/runner/Runner.cpp
     src/models/DbConfig.cpp
     src/infrastructure/ConfigLoader.cpp
+    src/database/DbResult.cpp
 )
 
 target_include_directories(app_logic PRIVATE
