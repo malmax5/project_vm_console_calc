@@ -27,12 +27,18 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.1.0
+)
+
+FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/heads/main.zip
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
-FetchContent_MakeAvailable(pvm_math_lib spdlog json googletest)
+FetchContent_MakeAvailable(pvm_math_lib spdlog json fmt googletest)
 
 add_library(app_logic STATIC
     src/logger/Logger.cpp
@@ -57,6 +63,7 @@ target_link_libraries(app_logic PRIVATE
     spdlog::spdlog
     nlohmann_json::nlohmann_json
     PostgreSQL::PostgreSQL
+    fmt::fmt
 )
 
 add_executable(calculator src/main.cpp)
