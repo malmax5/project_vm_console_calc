@@ -10,7 +10,7 @@ template <typename TResult> class IDbConnection
   public:
     IDbConnection() = default;
     virtual ~IDbConnection() = default;
-    
+
     IDbConnection(const IDbConnection &) = delete;
     IDbConnection &operator=(const IDbConnection &) = delete;
     IDbConnection(IDbConnection &&) noexcept = default;
