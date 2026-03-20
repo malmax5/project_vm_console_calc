@@ -7,18 +7,6 @@
 namespace app_calculator::database
 {
 
-struct PgResultDeleter
-{
-  public:
-    void operator()(PGresult *res) const
-    {
-        if (res != nullptr)
-        {
-            PQclear(res);
-        }
-    }
-};
-
 class DbResult
 {
   public:
@@ -36,6 +24,18 @@ class DbResult
     void checkError() const;
 
   private:
+    struct PgResultDeleter
+    {
+      public:
+        void operator()(PGresult *res) const
+        {
+            if (res != nullptr)
+            {
+                PQclear(res);
+            }
+        }
+    };
+
     std::unique_ptr<PGresult, PgResultDeleter> _result;
 };
 
