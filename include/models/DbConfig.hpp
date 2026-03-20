@@ -21,7 +21,7 @@ struct DbConfig
     std::string connectionString() const
     {
         return "host=" + host + " port=" + std::to_string(port) + " dbname=" + dbname +
-               " user=" + user + "password=" + password;
+               " user=" + user + " password=" + password;
     }
 };
 
