@@ -9,7 +9,10 @@ namespace app_calculator::database
 template <typename TResult> class DbRepository
 {
   public:
-    explicit DbRepository(std::shared_ptr<core::IDbConnection<TResult>> dbConnection);
+    DbRepository(std::shared_ptr<core::IDbConnection<TResult>> dbConnection)
+        : _dbConnection(std::move(dbConnection))
+    {
+    }
     virtual ~DbRepository() = default;
 
     DbRepository(const DbRepository &) = delete;
