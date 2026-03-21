@@ -16,7 +16,8 @@ class HistoryRepository final : public core::IRepository<models::Calculation>,
 
     void add(const models::Calculation &item) override;
     std::vector<models::Calculation> getAll() const override;
-    std::optional<int64_t> findResult(int64_t operandA, std::optional<int64_t> operandB, std::string_view operation) const override;
+    std::optional<int64_t> findResult(int64_t operandA, std::optional<int64_t> operandB,
+                                      std::string_view operation) const override;
 };
 
 } // namespace app_calculator::database

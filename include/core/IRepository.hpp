@@ -18,7 +18,8 @@ template <typename T> class IRepository
 
     virtual void add(const T &item) = 0;
     virtual std::vector<T> getAll() const = 0;
-    virtual std::optional<int64_t> findResult(int64_t operandA, std::optional<int64_t> operandB, std::string_view operation) const = 0;
+    virtual std::optional<int64_t> findResult(int64_t operandA, std::optional<int64_t> operandB,
+                                              std::string_view operation) const = 0;
 };
 
 } // namespace app_calculator::core

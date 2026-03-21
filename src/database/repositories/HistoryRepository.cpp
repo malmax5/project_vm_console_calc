@@ -54,17 +54,18 @@ std::vector<models::Calculation> HistoryRepository::getAll() const
     return history;
 }
 
-std::optional<int64_t> HistoryRepository::findResult(int64_t operandA, std::optional<int64_t> operandB, std::string_view operation) const
+std::optional<int64_t> HistoryRepository::findResult(int64_t operandA,
+                                                     std::optional<int64_t> operandB,
+                                                     std::string_view operation) const
 {
     std::string valueB = operandB ? fmt::format("= {}", *operandB) : "IS NULL";
 
-    std::string query = fmt::format(
-        "SELECT result FROM calculation_history "
-        "WHERE operand_a = {} AND operand_b = {} AND operation = {}"
-        "AND status_id = {}",
-        "ORDER BY created_at DESC LIMIT 1;"
-        operandA, velueB, operation, static_cast<int>(models::OperationStatus::success));
-    
+    std::string query = fmt::format("SELECT result FROM calculation_history "
+                                    "WHERE operand_a = {} AND operand_b = {} AND operation = {}"
+                                    "AND status_id = {}",
+                                    "ORDER BY created_at DESC LIMIT 1;" operandA, velueB, operation,
+                                    static_cast<int>(models::OperationStatus::success));
+
     auto res = getDbConnection().execute(query);
 
     std::optional<int64_t> result = std::nullopt;
