@@ -1,5 +1,7 @@
 #pragma once
 #include <optional>
+#include <stdint.h>
+#include <string_view>
 #include <vector>
 
 namespace app_calculator::core
