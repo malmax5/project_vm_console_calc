@@ -10,6 +10,7 @@ struct OperationInfo
   public:
     std::string_view name;
     size_t expectedArgs;
+    bool isCommutative;
 
     bool operator<(const OperationInfo &other) const
     {
