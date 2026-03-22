@@ -50,11 +50,13 @@ add_library(app_logic STATIC
     src/runner/Runner.cpp
     src/models/DbConfig.cpp
     src/infrastructure/ConfigLoader.cpp
+    src/infrastructure/ComponentFactory.cpp
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
     src/database/repositories/HistoryRepository.cpp
     src/database/repositories/CachedHistoryRepository.cpp
     src/utils/OperationUtils.cpp
+    src/application/CalculatorApp.cpp
 )
 
 target_include_directories(app_logic PUBLIC
