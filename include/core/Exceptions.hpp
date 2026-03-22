@@ -41,11 +41,14 @@ class ValidationException : public AppException
 class CalculationException : public AppException
 {
   public:
-    CalculationException() : AppException("Calculation Error: Unknown issue.")
+    CalculationException()
+        : AppException("Calculation Error: Unknown issue."),
+          _code(models::OperationStatus::unknownError)
     {
     }
 
-    explicit CalculationException(const std::string &msg, models::OperationStatus code = models::OperationStatus::unknownError)
+    explicit CalculationException(const std::string &msg, models::OperationStatus code =
+                                                              models::OperationStatus::unknownError)
         : AppException("Calculation Error: " + msg), _code(code)
     {
     }
