@@ -45,6 +45,7 @@ add_library(app_logic STATIC
     src/parser/JsonParser.cpp
     src/checker/Checker.cpp
     src/calculator/Calculator.cpp
+    src/calculator/CachedCalculator.cpp
     src/printer/Printer.cpp
     src/runner/Runner.cpp
     src/models/DbConfig.cpp
@@ -52,6 +53,8 @@ add_library(app_logic STATIC
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
     src/database/repositories/HistoryRepository.cpp
+    src/database/repositories/CachedHistoryRepository.cpp
+    src/utils/OperationUtils.cpp
 )
 
 target_include_directories(app_logic PUBLIC
