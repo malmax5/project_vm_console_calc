@@ -15,7 +15,7 @@ class CachedCalculator final : public core::ICalculator
   public:
     CachedCalculator(std::unique_ptr<core::ICalculator> calculator,
                      std::shared_ptr<core::IRepository<models::Calculation>> repository);
-    ~CachedCalculator() override;
+    ~CachedCalculator() override = default;
 
     CachedCalculator(const CachedCalculator &) = delete;
     CachedCalculator &operator=(CachedCalculator &) = delete;

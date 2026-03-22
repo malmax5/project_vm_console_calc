@@ -15,6 +15,12 @@ class CachedHistoryRepository : public core::IRepository<models::Calculation>
   public:
     explicit CachedHistoryRepository(
         std::unique_ptr<core::IRepository<models::Calculation>> repository);
+    ~CachedHistoryRepository() override = default;
+
+    CachedHistoryRepository(const CachedHistoryRepository &) = delete;
+    CachedHistoryRepository &operator=(const CachedHistoryRepository &) = delete;
+    CachedHistoryRepository(CachedHistoryRepository &&) noexcept = default;
+    CachedHistoryRepository &operator=(CachedHistoryRepository &&) noexcept = default;
 
     void add(const models::Calculation &item) override;
     std::vector<models::Calculation> getAll() const override;
