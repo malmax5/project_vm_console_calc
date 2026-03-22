@@ -16,10 +16,10 @@ void to_json(nlohmann::json &jsonData, const DbConfig &dbConfig)
 
 void from_json(const nlohmann::json &jsonData, DbConfig &dbConfig)
 {
-    if (jsonData.contains("database")) 
+    if (jsonData.contains("database"))
     {
-        const auto& jsonDataAtDb = jsonData.at("database");
-        
+        const auto &jsonDataAtDb = jsonData.at("database");
+
         jsonDataAtDb.at("host").get_to(dbConfig.host);
         jsonDataAtDb.at("port").get_to(dbConfig.port);
         jsonDataAtDb.at("dbname").get_to(dbConfig.dbname);

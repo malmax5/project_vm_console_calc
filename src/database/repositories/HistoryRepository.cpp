@@ -63,8 +63,9 @@ std::optional<int64_t> HistoryRepository::findResult(int64_t operandA,
     std::string query = fmt::format("SELECT result FROM calculation_history "
                                     "WHERE operand_a = {} AND operand_b {} AND operation = '{}' "
                                     "AND status_id = {} "
-                                    "ORDER BY created_at DESC LIMIT 1;", operandA, valueB,
-                                    operation, static_cast<int>(models::OperationStatus::success));
+                                    "ORDER BY created_at DESC LIMIT 1;",
+                                    operandA, valueB, operation,
+                                    static_cast<int>(models::OperationStatus::success));
 
     auto res = getDbConnection().execute(query);
 
