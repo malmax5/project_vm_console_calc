@@ -49,7 +49,7 @@ void DbResult::checkError() const
 
         if (_result)
         {
-            PQresultErrorMessage(_result.get());
+            msg = PQresultErrorMessage(_result.get());
         }
 
         throw std::runtime_error("Database error: " + msg);
