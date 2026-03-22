@@ -60,9 +60,7 @@ add_library(app_logic STATIC
 target_include_directories(app_logic PUBLIC
     include
     ${PostgreSQL_INCLUDE_DIRS}
-)
-target_include_directories(app_logic PRIVATE
-    ${PostgreSQL_INCLUDE_DIRS}
+    ${pvm_math_lib_SOURCE_DIR}/include
 )
 target_link_libraries(app_logic PRIVATE
     pvm_math_lib
