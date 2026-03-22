@@ -1,5 +1,7 @@
 #pragma once
 
+#include "models/Calculation.hpp"
+
 #include <stdexcept>
 #include <string>
 
@@ -43,10 +45,18 @@ class CalculationException : public AppException
     {
     }
 
-    explicit CalculationException(const std::string &msg)
-        : AppException("Calculation Error: " + msg)
+    explicit CalculationException(const std::string &msg, models::OperationStatus code = models::OperationStatus::unknownError)
+        : AppException("Calculation Error: " + msg), _code(code)
     {
     }
+
+    models::OperationStatus getCode() const
+    {
+        return _code;
+    }
+
+  private:
+    models::OperationStatus _code;
 };
 
 } // namespace app_calculator::exceptions
