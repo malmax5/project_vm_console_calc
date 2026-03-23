@@ -68,16 +68,33 @@ std::optional<int64_t> HistoryRepository::findResult(int64_t operandA,
                                                      std::optional<int64_t> operandB,
                                                      std::string_view operation) const
 {
-    std::string valueB = operandB ? fmt::format("= {}", *operandB) : "IS NULL";
+    std::string query;
+    std::vector<const char *> params;
+    std::string operandAStr = std::to_string(operandA);
+    std::string operationStr(operation);
+    std::string statusStr = std::to_string(static_cast<int>(models::OperationStatus::success));
 
-    std::string query = fmt::format("SELECT result FROM calculation_history "
-                                    "WHERE operand_a = {} AND operand_b {} AND operation = '{}' "
-                                    "AND status_id = {} "
-                                    "ORDER BY created_at DESC LIMIT 1;",
-                                    operandA, valueB, operation,
-                                    static_cast<int>(models::OperationStatus::success));
+    if (operandB.has_value())
+    {
+        query = R"(
+            SELECT result FROM calculation_history
+            WHERE operand_a = $1 AND operand_b = $2 AND operation = $3 AND status_id = $4
+            ORDER BY created_at DESC LIMIT 1;)";
 
-    auto res = getDbConnection().execute(query);
+        std::string operandBStr = std::to_string(*operandB);
+        params = {operandAStr.c_str(), operandBStr.c_str(), operationStr.c_str(),
+                  statusStr.c_str()};
+    }
+    else
+    {
+        query = R"(
+            SELECT result FROM calculation_history
+            WHERE operand_a = $1 AND operand_b IS NULL AND operation = $2 AND status_id = $3
+            ORDER BY created_at DESC LIMIT 1;)";
+        params = {operandAStr.c_str(), nullptr, operationStr.c_str(), statusStr.c_str()};
+    }
+
+    auto res = getDbConnection().executeParams(query, params);
 
     std::optional<int64_t> result = std::nullopt;
     if (res.rowCount() > 0 && !res.getValue(0, 0).empty())
