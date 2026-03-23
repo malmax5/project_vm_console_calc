@@ -12,7 +12,8 @@ void HistoryRepository::add(const models::Calculation &item)
 
     std::string query = fmt::format(
         "INSERT INTO calculation_history (operand_a, operand_b, operation, result, status_id) "
-        "VALUES ({}, {}, '{}', {}, {});",
+        "VALUES ({}, {}, '{}', {}, {})"
+        "ON CONFLICT (operand_a, operand_b, operation) DO NOTHING;",
         item.operandA, valueB, item.operation, valueResult, static_cast<int>(item.status));
 
     getDbConnection().execute(query);
