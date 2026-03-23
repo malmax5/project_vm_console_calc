@@ -52,7 +52,14 @@ std::string CalculatorApp::getResourcePath(const char *executablePath)
 
     if (std::filesystem::exists(configPath))
     {
-        return std::filesystem::canonical(configPath).string();
+        try
+        {
+            return std::filesystem::canonical(configPath).string();
+        }
+        catch (const std::filesystem::filesystem_error&)
+        {
+            return std::filesystem::absolute(configPath).string();
+        }
     }
 
     return "config/config.json";
