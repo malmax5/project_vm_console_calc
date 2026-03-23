@@ -9,7 +9,8 @@ int main(int argc, char **argv)
 
     try
     {
-        CalculatorApp::run(argc, argv);
+        CalculatorApp app;
+        app.run(argc, argv);
     }
     catch (const std::exception &e)
     {
