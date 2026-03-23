@@ -20,7 +20,7 @@ std::string makeOperationKey(int64_t operandA, std::optional<int64_t> operandB,
                                  " not found in metadata. Cache key generation failed.");
     }
 
-    if (itOperation->isCommutative)
+    if (itOperation->second.isCommutative)
     {
         key = key + (operandB.has_value() ? std::to_string(std::min(operandA, *operandB)) + ":" +
                                                 std::to_string(std::max(operandA, *operandB))
