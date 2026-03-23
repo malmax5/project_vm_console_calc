@@ -21,15 +21,16 @@ AppComponents ComponentFactory::createProductionComponents(const std::string &co
 
     auto dbConnection = std::make_shared<database::PostgresConnection>(config.connectionString());
     auto historyRepository = std::make_unique<database::HistoryRepository>(dbConnection);
-    auto cachedRepository =
-        std::make_shared<database::CachedHistoryRepository>(std::move(historyRepository));
 
     auto baseCalculator = std::make_unique<calculator::Calculator>();
 
     AppComponents components;
     components.parser = std::make_unique<parser::JsonParser>();
     components.checker = std::make_unique<checker::Checker>();
-    components.printer = std::make_unique<printer::Printer>();
+    components.printer = std::make_shared<printer::Printer>();
+
+    auto cachedRepository =
+        std::make_shared<database::CachedHistoryRepository>(std::move(historyRepository), components.printer);
     components.calculator =
         std::make_unique<calculator::CachedCalculator>(std::move(baseCalculator), cachedRepository);
 
