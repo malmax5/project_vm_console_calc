@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Exceptions.hpp"
+
 #include <fstream>
 #include <string>
 
@@ -14,7 +16,7 @@ class ConfigLoader
         std::ifstream file(path);
         if (!file.is_open())
         {
-            throw std::runtime_error("Failed to open config: " + path);
+            throw exceptions::ConfigException("Failed to open config: " + path);
         }
 
         return parseInternal<T>(file);
