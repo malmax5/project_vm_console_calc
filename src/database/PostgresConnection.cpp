@@ -65,8 +65,7 @@ DbResult PostgresConnection::execute(const std::string &query)
 {
     checkConnection();
 
-    PGresult *rawResult = PQexec(_connection.get(), query.c_str());
-    DbResult result(rawResult);
+    DbResult result(PQexec(_connection.get(), query.c_str()));
 
     result.checkError();
 
