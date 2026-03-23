@@ -1,6 +1,6 @@
 #include "database/PostgresConnection.hpp"
 
-#include <stdexcept>
+#include "core/Exceptions.hpp"
 
 namespace app_calculator::database
 {
@@ -27,7 +27,7 @@ void PostgresConnection::checkConnection() const
             err = PQerrorMessage(_connection.get());
         }
 
-        throw std::runtime_error("Database connection failed: " + err);
+        throw exceptions::ConnectionException(err);
     }
 }
 
