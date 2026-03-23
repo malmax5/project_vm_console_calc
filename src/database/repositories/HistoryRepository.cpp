@@ -8,16 +8,16 @@ namespace app_calculator::database
 void HistoryRepository::add(const models::Calculation &item)
 {
     std::string operandAStr = std::to_string(item.operandA);
-    std::string operandBStr = item.operandB ? std::to_string(*item.operandB) : "NULL";
+    std::string operandBStr = item.operandB ? std::to_string(*item.operandB) : "";
     std::string operationStr = item.operation;
-    std::string resultStr = item.result ? std::to_string(*item.result) : "NULL";
+    std::string resultStr = item.result ? std::to_string(*item.result) : "";
     std::string statusStr = std::to_string(static_cast<int>(item.status));
 
     std::vector<const char *> params;
     params.push_back(operandAStr.c_str());
-    params.push_back(operandBStr.c_str());
+    params.push_back(item.operandB ? operandBStr.c_str() : nullptr);
     params.push_back(operationStr.c_str());
-    params.push_back(resultStr.c_str());
+    params.push_back(item.result ? resultStr.c_str() : nullptr);
     params.push_back(statusStr.c_str());
 
     std::string query = R"(
