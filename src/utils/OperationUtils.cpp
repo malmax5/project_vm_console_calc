@@ -1,9 +1,9 @@
 #include "utils/OperationUtils.hpp"
 
+#include "core/Exceptions.hpp"
 #include "models/Operations.hpp"
 
 #include <algorithm>
-#include <stdexcept>
 
 namespace app_calculator::utils::operations
 {
@@ -16,8 +16,9 @@ std::string makeOperationKey(int64_t operandA, std::optional<int64_t> operandB,
     const auto &itOperation = models::operations::operationsInfo.find({operation});
     if (itOperation == models::operations::operationsInfo.end())
     {
-        throw std::runtime_error("Critical: Operation " + std::string(operation) +
-                                 " not found in metadata. Cache key generation failed.");
+        throw exceptions::ValidationException(
+            "Critical: Operation " + std::string(operation) +
+            " not found in metadata. Cache key generation failed.");
     }
 
     if (itOperation->second.isCommutative)
