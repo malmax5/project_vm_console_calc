@@ -19,6 +19,8 @@ class PostgresConnection final : public core::IDbConnection<DbResult>
     PostgresConnection &operator=(PostgresConnection &&) noexcept = default;
 
     DbResult execute(const std::string &query) override;
+    DbResult executeParams(const std::string &query,
+                           const std::vector<const char *> &params) override;
     bool isConnected() const override;
 
   private:
