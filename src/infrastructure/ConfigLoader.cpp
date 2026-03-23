@@ -8,10 +8,17 @@ namespace app_calculator::infrastructure
 
 template <typename T> T ConfigLoader::parseInternal(std::ifstream &file)
 {
-    nlohmann::json jsonData;
-    file >> jsonData;
+    try
+    {
+        nlohmann::json jsonData;
+        file >> jsonData;
 
-    return jsonData.get<T>();
+        return jsonData.get<T>();
+    }
+    catch (const nlohmann::json::exception &e)
+    {
+        throw exceptions::ConfigException(std::string("JSON parsing error: ") + e.what());
+    }
 }
 
 template models::DbConfig ConfigLoader::parseInternal<models::DbConfig>(std::ifstream &);
