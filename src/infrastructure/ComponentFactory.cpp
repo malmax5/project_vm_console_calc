@@ -7,10 +7,10 @@
 #include "database/repositories/CachedHistoryRepository.hpp"
 #include "database/repositories/HistoryRepository.hpp"
 #include "infrastructure/ConfigLoader.hpp"
+#include "logger/Logger.hpp"
 #include "models/DbConfig.hpp"
 #include "parser/JsonParser.hpp"
 #include "printer/Printer.hpp"
-#include "logger/Logger.hpp"
 
 namespace app_calculator::infrastructure
 {
