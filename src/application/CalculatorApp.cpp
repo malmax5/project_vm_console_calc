@@ -56,7 +56,7 @@ std::string CalculatorApp::getResourcePath(const char *executablePath)
         {
             return std::filesystem::canonical(configPath).string();
         }
-        catch (const std::filesystem::filesystem_error&)
+        catch (const std::filesystem::filesystem_error &)
         {
             return std::filesystem::absolute(configPath).string();
         }

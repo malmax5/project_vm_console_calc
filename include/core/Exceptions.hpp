@@ -64,23 +64,20 @@ class CalculationException : public AppException
 
 class DatabaseException : public AppException
 {
-public:
-    DatabaseException()
-        : AppException("Database Error: Unknown issue.")
+  public:
+    DatabaseException() : AppException("Database Error: Unknown issue.")
     {
     }
 
-    explicit DatabaseException(const std::string &msg)
-        : AppException("Database Error: " + msg)
+    explicit DatabaseException(const std::string &msg) : AppException("Database Error: " + msg)
     {
     }
 };
 
 class ConnectionException : public DatabaseException
 {
-public:
-    ConnectionException()
-        : DatabaseException("Connection failed.")
+  public:
+    ConnectionException() : DatabaseException("Connection failed.")
     {
     }
 
@@ -92,9 +89,8 @@ public:
 
 class QueryException : public DatabaseException
 {
-public:
-    QueryException()
-        : DatabaseException("Query execution failed.")
+  public:
+    QueryException() : DatabaseException("Query execution failed.")
     {
     }
 
@@ -106,14 +102,12 @@ public:
 
 class ConfigException : public AppException
 {
-public:
-    ConfigException()
-        : AppException("Configuration Error: Unknown issue.")
+  public:
+    ConfigException() : AppException("Configuration Error: Unknown issue.")
     {
     }
 
-    explicit ConfigException(const std::string &msg)
-        : AppException("Configuration Error: " + msg)
+    explicit ConfigException(const std::string &msg) : AppException("Configuration Error: " + msg)
     {
     }
 };
