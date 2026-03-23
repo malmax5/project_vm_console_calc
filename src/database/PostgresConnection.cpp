@@ -72,4 +72,19 @@ DbResult PostgresConnection::execute(const std::string &query)
     return result;
 }
 
+DbResult PostgresConnection::executeParams(const std::string &query,
+                                           const std::vector<const char *> &params)
+{
+    checkConnection();
+
+    int nParams = static_cast<int>(params.size());
+
+    DbResult result(PQexecParams(_connection.get(), query.c_str(), nParams, nullptr, params.data(),
+                                 nullptr, nullptr, 0));
+
+    result.checkError();
+
+    return result;
+}
+
 } // namespace app_calculator::database
