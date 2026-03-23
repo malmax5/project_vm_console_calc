@@ -9,8 +9,9 @@ namespace app_calculator::database
 {
 
 CachedHistoryRepository::CachedHistoryRepository(
-    std::unique_ptr<core::IRepository<models::Calculation>> repository)
-    : _repository(std::move(repository))
+    std::unique_ptr<core::IRepository<models::Calculation>> repository,
+    std::shared_ptr<core::IPrinter> printer)
+    : _repository(std::move(repository)), _printer(printer)
 {
     warmUpCache();
 }
@@ -41,20 +42,29 @@ std::optional<int64_t> CachedHistoryRepository::findResult(int64_t operandA,
     const auto &itKey = _cache.find(key);
     if (itKey != _cache.end())
     {
+        _printer->printInfo("[Cache] Hit: Found result in cache memory");
+
         return itKey->second;
     }
 
     auto dbResult = _repository->findResult(operandA, operandB, operation);
     if (dbResult.has_value())
     {
+        _printer->printInfo("[Database] Hit: Found result in DB");
+
         _cache[key] = *dbResult;
+
+        return dbResult;
     }
 
+    _printer->printInfo("[History] Miss: No previous records");
     return dbResult;
 }
 
 void CachedHistoryRepository::warmUpCache()
 {
+    _printer->printInfo("Warming up cache from database...");
+
     auto const &allHistroy = _repository->getAll();
 
     for (const auto &item : allHistroy)
@@ -73,6 +83,8 @@ void CachedHistoryRepository::warmUpCache()
             }
         }
     }
+
+    _printer->printInfo("Cache warmup finished. Loaded " + std::to_string(_cache.size()) + " records.");
 }
 
 } // namespace app_calculator::database

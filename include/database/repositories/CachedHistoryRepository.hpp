@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/IRepository.hpp"
+#include "core/IPrinter.hpp"
 #include "database/DbResult.hpp"
 #include "models/Calculation.hpp"
 
@@ -14,7 +15,8 @@ class CachedHistoryRepository : public core::IRepository<models::Calculation>
 {
   public:
     explicit CachedHistoryRepository(
-        std::unique_ptr<core::IRepository<models::Calculation>> repository);
+        std::unique_ptr<core::IRepository<models::Calculation>> repository,
+        std::shared_ptr<core::IPrinter> printer);
     ~CachedHistoryRepository() override = default;
 
     CachedHistoryRepository(const CachedHistoryRepository &) = delete;
@@ -31,6 +33,7 @@ class CachedHistoryRepository : public core::IRepository<models::Calculation>
     void warmUpCache();
 
     std::unique_ptr<core::IRepository<models::Calculation>> _repository;
+    std::shared_ptr<core::IPrinter> _printer;
 
     mutable std::unordered_map<std::string, int64_t> _cache;
 };
