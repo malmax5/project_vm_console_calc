@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/IRepository.hpp"
 #include "core/IPrinter.hpp"
+#include "core/IRepository.hpp"
 #include "database/DbResult.hpp"
 #include "models/Calculation.hpp"
 

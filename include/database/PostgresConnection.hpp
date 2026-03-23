@@ -34,6 +34,7 @@ class PostgresConnection final : public core::IDbConnection<DbResult>
     };
 
     void checkConnection() const;
+    void initializeSchema();
 
     std::unique_ptr<PGconn, PgConnDeleter> _connection;
 };

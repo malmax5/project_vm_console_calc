@@ -84,7 +84,8 @@ void CachedHistoryRepository::warmUpCache()
         }
     }
 
-    _printer->printInfo("Cache warmup finished. Loaded " + std::to_string(_cache.size()) + " records.");
+    _printer->printInfo("Cache warmup finished. Loaded " + std::to_string(_cache.size()) +
+                        " records.");
 }
 
 } // namespace app_calculator::database
