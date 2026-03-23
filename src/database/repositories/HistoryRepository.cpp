@@ -1,7 +1,5 @@
 #include "database/repositories/HistoryRepository.hpp"
 
-#include <fmt/core.h>
-
 namespace app_calculator::database
 {
 
@@ -30,8 +28,8 @@ void HistoryRepository::add(const models::Calculation &item)
 
 std::vector<models::Calculation> HistoryRepository::getAll() const
 {
-    std::string query = fmt::format(
-        "SELECT operand_a, operand_b, operation, result, status_id FROM calculation_history;");
+    std::string query =
+        "SELECT operand_a, operand_b, operation, result, status_id FROM calculation_history;";
 
     auto res = getDbConnection().execute(query);
     std::vector<models::Calculation> history;
