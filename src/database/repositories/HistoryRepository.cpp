@@ -7,16 +7,25 @@ namespace app_calculator::database
 
 void HistoryRepository::add(const models::Calculation &item)
 {
-    std::string valueB = item.operandB ? std::to_string(*item.operandB) : "NULL";
-    std::string valueResult = item.result ? std::to_string(*item.result) : "NULL";
+    std::string operandAStr = std::to_string(item.operandA);
+    std::string operandBStr = item.operandB ? std::to_string(*item.operandB) : "NULL";
+    std::string operationStr = item.operation;
+    std::string resultStr = item.result ? std::to_string(*item.result) : "NULL";
+    std::string statusStr = std::to_string(static_cast<int>(item.status));
 
-    std::string query = fmt::format(
-        "INSERT INTO calculation_history (operand_a, operand_b, operation, result, status_id) "
-        "VALUES ({}, {}, '{}', {}, {})"
-        "ON CONFLICT (operand_a, operand_b, operation) DO NOTHING;",
-        item.operandA, valueB, item.operation, valueResult, static_cast<int>(item.status));
+    std::vector<const char *> params;
+    params.push_back(operandAStr.c_str());
+    params.push_back(operandBStr.c_str());
+    params.push_back(operationStr.c_str());
+    params.push_back(resultStr.c_str());
+    params.push_back(statusStr.c_str());
 
-    getDbConnection().execute(query);
+    std::string query = R"(
+        INSERT INTO calculation_history (operand_a, operand_b, operation, result, status_id)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (operand_a, operand_b, operation) DO NOTHING;)";
+
+    getDbConnection().executeParams(query, params);
 }
 
 std::vector<models::Calculation> HistoryRepository::getAll() const
