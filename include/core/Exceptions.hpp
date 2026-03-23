@@ -62,4 +62,60 @@ class CalculationException : public AppException
     models::OperationStatus _code;
 };
 
+class DatabaseException : public AppException
+{
+public:
+    DatabaseException()
+        : AppException("Database Error: Unknown issue.")
+    {
+    }
+
+    explicit DatabaseException(const std::string &msg)
+        : AppException("Database Error: " + msg)
+    {
+    }
+};
+
+class ConnectionException : public DatabaseException
+{
+public:
+    ConnectionException()
+        : DatabaseException("Connection failed.")
+    {
+    }
+
+    explicit ConnectionException(const std::string &msg)
+        : DatabaseException("Connection failed: " + msg)
+    {
+    }
+};
+
+class QueryException : public DatabaseException
+{
+public:
+    QueryException()
+        : DatabaseException("Query execution failed.")
+    {
+    }
+
+    explicit QueryException(const std::string &msg)
+        : DatabaseException("Query execution failed: " + msg)
+    {
+    }
+};
+
+class ConfigException : public AppException
+{
+public:
+    ConfigException()
+        : AppException("Configuration Error: Unknown issue.")
+    {
+    }
+
+    explicit ConfigException(const std::string &msg)
+        : AppException("Configuration Error: " + msg)
+    {
+    }
+};
+
 } // namespace app_calculator::exceptions
