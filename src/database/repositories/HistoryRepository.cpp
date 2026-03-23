@@ -89,7 +89,7 @@ std::optional<int64_t> HistoryRepository::findResult(int64_t operandA,
             SELECT result FROM calculation_history
             WHERE operand_a = $1 AND operand_b IS NULL AND operation = $2 AND status_id = $3
             ORDER BY created_at DESC LIMIT 1;)";
-        params = {operandAStr.c_str(), nullptr, operationStr.c_str(), statusStr.c_str()};
+        params = {operandAStr.c_str(), operationStr.c_str(), statusStr.c_str()};
     }
 
     auto res = getDbConnection().executeParams(query, params);
