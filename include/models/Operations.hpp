@@ -21,7 +21,6 @@ inline const std::unordered_map<std::string_view, models::OperationInfo> operati
     {mul, {.name = mul, .expectedArgs = 2, .isCommutative = true}},
     {div, {.name = div, .expectedArgs = 2, .isCommutative = false}},
     {pow, {.name = pow, .expectedArgs = 2, .isCommutative = false}},
-    {fact, {.name = fact, .expectedArgs = 1, .isCommutative = false}}
-};
+    {fact, {.name = fact, .expectedArgs = 1, .isCommutative = false}}};
 
 } // namespace app_calculator::models::operations
