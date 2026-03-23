@@ -13,20 +13,33 @@ void CalculatorApp::run(int argc, char **argv)
     try
     {
         std::string configPath = getResourcePath(argv[0]);
-
         auto components = infrastructure::ComponentFactory::createProductionComponents(configPath);
+        _printer = std::move(components.printer);
+
+        _printer->printInfo("Application started");
+        _printer->printInfo("Target config path: " + configPath);
 
         runner::Runner runner(std::move(components.parser), std::move(components.checker),
-                              std::move(components.calculator), std::move(components.printer));
+                              std::move(components.calculator), _printer);
 
         runner.run(argc, argv);
     }
     catch (const std::exception &e)
     {
+        if (_printer)
+        {
+            _printer->printError("Initialization failed: " + std::string(e.what()));
+        }
+
         throw;
     }
     catch (...)
     {
+        if (_printer)
+        {
+            _printer->printError("Initialization failed: Unknown error");
+        }
+
         throw;
     }
 }
