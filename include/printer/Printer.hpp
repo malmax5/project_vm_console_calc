@@ -26,7 +26,7 @@ class Printer final : public core::IPrinter
     void printInfo(std::string_view message) const override;
 
   private:
-    logger::ILogger *_logger;
+    std::shared_ptr<logger::ILogger> _logger;
 };
 
 } // namespace app_calculator::printer

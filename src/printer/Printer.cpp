@@ -7,7 +7,7 @@
 namespace app_calculator::printer
 {
 
-Printer::Printer() : _logger(&logger::Logger::instance())
+Printer::Printer() : _logger(logger::Logger::instance())
 {
 }
 
