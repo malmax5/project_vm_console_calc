@@ -1,6 +1,6 @@
 #include "database/DbResult.hpp"
 
-#include <stdexcept>
+#include "core/Exceptions.hpp"
 
 namespace app_calculator::database
 {
@@ -52,7 +52,7 @@ void DbResult::checkError() const
             msg = PQresultErrorMessage(_result.get());
         }
 
-        throw std::runtime_error("Database error: " + msg);
+        throw exceptions::QueryException(msg);
     }
 }
 
