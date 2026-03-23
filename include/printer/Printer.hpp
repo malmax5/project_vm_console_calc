@@ -12,7 +12,7 @@ class Printer final : public core::IPrinter
 {
   public:
     Printer();
-    Printer(logger::ILogger *logger);
+    Printer(std::shared_ptr<logger::ILogger> logger);
     ~Printer() override;
 
     Printer(const Printer &) = delete;
