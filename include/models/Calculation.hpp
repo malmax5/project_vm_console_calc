@@ -7,7 +7,7 @@
 namespace app_calculator::models
 {
 
-enum class OperationStatus : int
+enum class OperationStatus : std::uint8_t
 {
     success = 0,
     divisionByZero = 1,
