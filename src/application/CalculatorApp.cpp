@@ -2,6 +2,7 @@
 
 #include "infrastructure/ComponentFactory.hpp"
 #include "runner/Runner.hpp"
+#include "core/Exceptions.hpp"
 
 #include <filesystem>
 
@@ -46,23 +47,20 @@ void CalculatorApp::run(int argc, char **argv)
 
 std::string CalculatorApp::getResourcePath(const char *executablePath)
 {
-    std::filesystem::path execPath = std::filesystem::absolute(executablePath);
-    std::filesystem::path executableDir = execPath.parent_path();
-    std::filesystem::path configPath = executableDir / ".." / "config" / "config.json";
-
-    if (std::filesystem::exists(configPath))
+    const std::string sysConfigPath = "/etc/calculator/config.json";
+    if (std::filesystem::exists(sysConfigPath))
     {
         try
         {
-            return std::filesystem::canonical(configPath).string();
+            return std::filesystem::canonical(sysConfigPath).string();
         }
-        catch (const std::filesystem::filesystem_error &)
+        catch (const std::filesystem::filesystem_error&)
         {
-            return std::filesystem::absolute(configPath).string();
+            return sysConfigPath;
         }
     }
 
-    return "config/config.json";
+    throw exceptions::ConfigException("Configuration file not found at: " + sysConfigPath);
 }
 
 } // namespace app_calculator
