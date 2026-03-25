@@ -13,8 +13,8 @@ class ILogger
 
     ILogger(const ILogger &) = delete;
     ILogger &operator=(const ILogger &) = delete;
-    ILogger(ILogger &&) noexcept = delete;
-    ILogger &operator=(ILogger &&) noexcept = delete;
+    ILogger(ILogger &&) noexcept = default;
+    ILogger &operator=(ILogger &&) noexcept = default;
 
     virtual void debug(std::string_view message) = 0;
     virtual void info(std::string_view message) = 0;

@@ -9,7 +9,7 @@ namespace app_calculator::logger
 class Logger final : public ILogger
 {
   public:
-    static Logger &instance();
+    static std::shared_ptr<ILogger> instance();
 
     ~Logger() override;
 

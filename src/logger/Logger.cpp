@@ -38,9 +38,9 @@ struct Logger::Impl
     std::shared_ptr<spdlog::logger> spdLogger;
 };
 
-Logger &Logger::instance()
+std::shared_ptr<ILogger> Logger::instance()
 {
-    static Logger inst;
+    static std::shared_ptr<ILogger> inst(new Logger());
     return inst;
 }
 

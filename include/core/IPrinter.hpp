@@ -13,8 +13,8 @@ class IPrinter
 
     IPrinter(const IPrinter &) = delete;
     IPrinter &operator=(const IPrinter &) = delete;
-    IPrinter(IPrinter &&) noexcept = delete;
-    IPrinter &operator=(IPrinter &&) noexcept = delete;
+    IPrinter(IPrinter &&) noexcept = default;
+    IPrinter &operator=(IPrinter &&) noexcept = default;
 
     virtual void printResult(long long result) const = 0;
     virtual void printError(std::string_view message) const = 0;

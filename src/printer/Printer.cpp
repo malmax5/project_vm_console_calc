@@ -7,11 +7,11 @@
 namespace app_calculator::printer
 {
 
-Printer::Printer() : _logger(&logger::Logger::instance())
+Printer::Printer() : _logger(logger::Logger::instance())
 {
 }
 
-Printer::Printer(logger::ILogger *logger) : _logger(logger)
+Printer::Printer(std::shared_ptr<logger::ILogger> logger) : _logger(logger)
 {
 }
 

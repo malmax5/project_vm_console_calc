@@ -1,5 +1,4 @@
-#include "logger/Logger.hpp"
-#include "runner/Runner.hpp"
+#include "application/CalculatorApp.hpp"
 
 #include <exception>
 #include <iostream>
@@ -10,7 +9,7 @@ int main(int argc, char **argv)
 
     try
     {
-        runner::Runner app;
+        CalculatorApp app;
         app.run(argc, argv);
     }
     catch (const std::exception &e)

@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 
+find_package(PostgreSQL REQUIRED)
+
 FetchContent_Declare(
     pvm_math_lib
     GIT_REPOSITORY https://github.com/malmax5/project_vm_math_lib
@@ -25,27 +27,49 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.1.0
+)
+
+FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/heads/main.zip
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
-FetchContent_MakeAvailable(pvm_math_lib spdlog json googletest)
+FetchContent_MakeAvailable(pvm_math_lib spdlog json fmt googletest)
 
 add_library(app_logic STATIC
     src/logger/Logger.cpp
     src/parser/JsonParser.cpp
     src/checker/Checker.cpp
     src/calculator/Calculator.cpp
+    src/calculator/CachedCalculator.cpp
     src/printer/Printer.cpp
     src/runner/Runner.cpp
+    src/models/DbConfig.cpp
+    src/infrastructure/ConfigLoader.cpp
+    src/infrastructure/ComponentFactory.cpp
+    src/database/DbResult.cpp
+    src/database/PostgresConnection.cpp
+    src/database/repositories/HistoryRepository.cpp
+    src/database/repositories/CachedHistoryRepository.cpp
+    src/utils/OperationUtils.cpp
+    src/application/CalculatorApp.cpp
 )
 
-target_include_directories(app_logic PRIVATE include)
+target_include_directories(app_logic PUBLIC
+    include
+    ${PostgreSQL_INCLUDE_DIRS}
+    ${pvm_math_lib_SOURCE_DIR}/include
+)
 target_link_libraries(app_logic PRIVATE
     pvm_math_lib
     spdlog::spdlog
     nlohmann_json::nlohmann_json
+    PostgreSQL::PostgreSQL
+    fmt::fmt
 )
 
 add_executable(calculator src/main.cpp)
@@ -121,3 +145,4 @@ install(TARGETS calculator
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES config/config.json DESTINATION /etc/calculator)

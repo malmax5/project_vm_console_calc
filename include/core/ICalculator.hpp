@@ -13,8 +13,8 @@ class ICalculator
 
     ICalculator(const ICalculator &) = delete;
     ICalculator &operator=(const ICalculator &) = delete;
-    ICalculator(ICalculator &&) noexcept = delete;
-    ICalculator &operator=(ICalculator &&) noexcept = delete;
+    ICalculator(ICalculator &&) noexcept = default;
+    ICalculator &operator=(ICalculator &&) noexcept = default;
 
     virtual long long calculate(const models::CalculationTask &task) = 0;
 };

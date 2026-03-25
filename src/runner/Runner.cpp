@@ -21,9 +21,9 @@ Runner::Runner()
 
 Runner::Runner(std::unique_ptr<core::IParser> parser, std::unique_ptr<core::IChecker> checker,
                std::unique_ptr<core::ICalculator> calculator,
-               std::unique_ptr<core::IPrinter> printer)
+               std::shared_ptr<core::IPrinter> printer)
     : _parser(std::move(parser)), _checker(std::move(checker)), _calculator(std::move(calculator)),
-      _printer(std::move(printer))
+      _printer(printer)
 {
 }
 

@@ -16,7 +16,7 @@ class Runner final : public core::IRunner
   public:
     Runner();
     Runner(std::unique_ptr<core::IParser> parser, std::unique_ptr<core::IChecker> checker,
-           std::unique_ptr<core::ICalculator> calculator, std::unique_ptr<core::IPrinter> printer);
+           std::unique_ptr<core::ICalculator> calculator, std::shared_ptr<core::IPrinter> printer);
     ~Runner() override;
 
     Runner(const Runner &) = delete;
@@ -30,7 +30,7 @@ class Runner final : public core::IRunner
     std::unique_ptr<core::IParser> _parser;
     std::unique_ptr<core::IChecker> _checker;
     std::unique_ptr<core::ICalculator> _calculator;
-    std::unique_ptr<core::IPrinter> _printer;
+    std::shared_ptr<core::IPrinter> _printer;
 };
 
 } // namespace app_calculator::runner

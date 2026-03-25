@@ -45,19 +45,22 @@ long long Calculator::calculate(const models::CalculationTask &task)
     }
     catch (const pvm_math_lib::calculator_exceptions::CalculatorExceptionOverflow &e)
     {
-        throw exceptions::CalculationException("Math Overflow: " + std::string(e.what()));
+        throw exceptions::CalculationException("Math Overflow: " + std::string(e.what()),
+                                               models::OperationStatus::overflow);
     }
     catch (const pvm_math_lib::calculator_exceptions::CalculatorExceptionDivideByZero &e)
     {
-        throw exceptions::CalculationException("Math Error: Division by zero");
+        throw exceptions::CalculationException("Math Error: Division by zero",
+                                               models::OperationStatus::divisionByZero);
     }
     catch (const pvm_math_lib::calculator_exceptions::CalculatorExceptionInvalidOperands &e)
     {
-        throw exceptions::CalculationException(e.what());
+        throw exceptions::CalculationException(e.what(), models::OperationStatus::invalidOperands);
     }
     catch (const std::exception &e)
     {
-        throw exceptions::CalculationException("Internal Math Error: " + std::string(e.what()));
+        throw exceptions::CalculationException("Internal Math Error: " + std::string(e.what()),
+                                               models::OperationStatus::unknownError);
     }
 
     throw exceptions::CalculationException();
