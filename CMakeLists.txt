@@ -145,3 +145,4 @@ install(TARGETS calculator
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES config/config.json DESTINATION /etc/calculator)
