@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/IRunner.hpp"
-#include "network/CalculatorServiceImpl.hpp"
 
 #include <memory>
 
