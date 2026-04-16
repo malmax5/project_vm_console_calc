@@ -72,6 +72,7 @@ target_include_directories(calc_grpc_proto PUBLIC
 )
 target_link_libraries(calc_grpc_proto PUBLIC
     gRPC::grpc++
+    gRPC::grpc++_reflection
     protobuf::libprotobuf
 )
 
