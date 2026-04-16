@@ -1,10 +1,7 @@
 #pragma once
 
-#include "core/ICalculator.hpp"
-#include "core/IChecker.hpp"
-#include "core/IParser.hpp"
-#include "core/IPrinter.hpp"
 #include "core/IRunner.hpp"
+#include "infrastructure/RunnerDeps.hpp"
 
 #include <memory>
 
@@ -14,10 +11,7 @@ namespace app_calculator::runner
 class ConsoleRunner final : public core::IRunner
 {
   public:
-    ConsoleRunner();
-    ConsoleRunner(std::unique_ptr<core::IParser> parser, std::unique_ptr<core::IChecker> checker,
-                  std::unique_ptr<core::ICalculator> calculator,
-                  std::shared_ptr<core::IPrinter> printer, const std::string &inputJson);
+    explicit ConsoleRunner(ConsoleRunnerDeps &deps);
     ~ConsoleRunner() override;
 
     ConsoleRunner(const ConsoleRunner &) = delete;

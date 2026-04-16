@@ -11,20 +11,9 @@
 namespace app_calculator::runner
 {
 
-ConsoleRunner::ConsoleRunner()
-    : _parser(std::make_unique<parser::JsonParser>()),
-      _checker(std::make_unique<checker::Checker>()),
-      _calculator(std::make_unique<calculator::Calculator>()),
-      _printer(std::make_unique<printer::Printer>())
-{
-}
-
-ConsoleRunner::ConsoleRunner(std::unique_ptr<core::IParser> parser,
-                             std::unique_ptr<core::IChecker> checker,
-                             std::unique_ptr<core::ICalculator> calculator,
-                             std::shared_ptr<core::IPrinter> printer, const std::string &inputJson)
-    : _parser(std::move(parser)), _checker(std::move(checker)), _calculator(std::move(calculator)),
-      _printer(printer), _inputJson(inputJson)
+ConsoleRunner::ConsoleRunner(ConsoleRunnerDeps &deps)
+    : _parser(std::move(deps.parser)), _checker(std::move(deps.checker)), _calculator(std::move(deps.calculator)),
+      _printer(deps.printer), _inputJson(deps.inputJson)
 {
 }
 

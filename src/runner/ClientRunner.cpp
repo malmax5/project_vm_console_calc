@@ -38,7 +38,6 @@ void ClientRunner::run()
 
     if (status.ok())
     {
-        _printer->printInfo("[Client] Success: " + std::to_string(response.result()));
         _printer->printInfo("[Client] Result: " + std::to_string(response.result()));
         _printer->printInfo("[Client] Status: " + response.status());
     }
