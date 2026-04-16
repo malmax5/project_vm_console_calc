@@ -4,6 +4,7 @@
 #include "core/IChecker.hpp"
 #include "core/IParser.hpp"
 #include "core/IPrinter.hpp"
+#include "core/IRunner.hpp"
 
 #include <memory>
 
@@ -23,6 +24,8 @@ class ComponentFactory
 {
   public:
     static AppComponents createProductionComponents(const std::string &configPath);
+    static std::unique_ptr<core::IRunner> createConsoleRunner(const std::string &configPath,
+                                                              std::string &inputJson);
 };
 
 } // namespace app_calculator::infrastructure

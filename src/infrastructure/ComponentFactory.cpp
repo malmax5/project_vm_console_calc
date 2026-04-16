@@ -11,6 +11,8 @@
 #include "models/DbConfig.hpp"
 #include "parser/JsonParser.hpp"
 #include "printer/Printer.hpp"
+#include "runner/ConsoleRunner.hpp"
+#include "runner/ServerRunner.hpp"
 
 namespace app_calculator::infrastructure
 {
@@ -36,6 +38,16 @@ AppComponents ComponentFactory::createProductionComponents(const std::string &co
         std::make_unique<calculator::CachedCalculator>(std::move(baseCalculator), cachedRepository);
 
     return components;
+}
+
+std::unique_ptr<core::IRunner> ComponentFactory::createConsoleRunner(const std::string &configPath,
+                                                                     std::string &inputJson)
+{
+    auto components = createProductionComponents(configPath);
+
+    return std::make_unique<runner::ConsoleRunner>(
+        std::move(components.parser), std::move(components.checker),
+        std::move(components.calculator), components.printer, inputJson);
 }
 
 } // namespace app_calculator::infrastructure
