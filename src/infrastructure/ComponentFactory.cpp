@@ -13,6 +13,7 @@
 #include "printer/Printer.hpp"
 #include "runner/ConsoleRunner.hpp"
 #include "runner/ServerRunner.hpp"
+#include "network/CalculatorServiceImpl.hpp"
 
 namespace app_calculator::infrastructure
 {
