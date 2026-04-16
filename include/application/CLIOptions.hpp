@@ -1,0 +1,30 @@
+#pragma once
+
+#include <string>
+#include <vector>
+
+namespace app_calculator
+{
+
+enum class AppMode
+{
+    SERVER,
+    CONSOLE,
+    CLIENT
+};
+
+struct CLIOptions
+{
+    AppMode mode;
+    std::string configPath = "/etc/calculator/config.json";
+    std::string serverAddress = "localhost:50051";
+    int timeoutMs = 5000;
+
+    std::string inputJson;
+    std::string operation;
+    std::vector<long long> operands;
+
+    bool verbose = false;
+};
+
+} // namespace app_calculator
