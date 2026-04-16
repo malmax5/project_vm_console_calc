@@ -3,6 +3,9 @@
 #include "core/IRunner.hpp"
 
 #include <memory>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 namespace grpc
 {
@@ -30,6 +33,10 @@ class ServerRunner final : public core::IRunner
   private:
     std::shared_ptr<::grpc::Service> _service;
     std::unique_ptr<::grpc::Server> _server;
+
+    std::thread signalThread;
+    std::atomic<bool> stopRequested{false};
+    std::mutex serverMutex;
 };
 
 } // namespace app_calculator::runner

@@ -1,46 +1,39 @@
 #include "runner/ServerRunner.hpp"
 
 #include <atomic>
+#include <cerrno>
 #include <csignal>
+#include <cstring>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
-#include <iostream>
+#include <pthread.h>
+#include <stdexcept>
 #include <thread>
 
 namespace app_calculator::runner
 {
 
-namespace
-{
-
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-std::atomic<ServerRunner *> gServerInstance{nullptr};
-
-} // namespace
-
-void handleSignal(int signal)
-{
-    if (gServerInstance.load() != nullptr)
-    {
-        std::cout << "\n[Signal Handler] Received signal " << signal
-                  << ", shutting down server...\n";
-        gServerInstance.load()->shutdown();
-    }
-}
-
 ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service) : _service(std::move(service))
 {
-    gServerInstance.store(this);
 }
 
 ServerRunner::~ServerRunner()
 {
     shutdown();
-    gServerInstance.store(nullptr);
 }
 
 void ServerRunner::run()
 {
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGTERM);
+    int maskResult = pthread_sigmask(SIG_BLOCK, &set, nullptr);
+    if (maskResult != 0)
+    {
+        throw std::runtime_error("pthread_sigmask failed: " + std::string(std::strerror(maskResult)));
+    }
+
     std::string serverAddress("0.0.0.0:50051");
     ::grpc::ServerBuilder builder;
 
@@ -54,21 +47,54 @@ void ServerRunner::run()
     {
         throw std::runtime_error("Failed to start gRPC server");
     }
-    std::cout << "Server is listening on " << serverAddress << std::endl;
 
-    std::signal(SIGINT, handleSignal);
-    std::signal(SIGTERM, handleSignal);
+    signalThread = std::thread([this, set]() mutable {
+        timespec timeout{0, 300'000'000};
+        while (!stopRequested.load())
+        {
+            int signal = sigtimedwait(&set, nullptr, &timeout);
+            if (signal == -1)
+            {
+                if (errno == EAGAIN || errno == EINTR)
+                {
+                    continue;
+                }
+
+                shutdown();
+                break;
+            }
+
+            if (signal == SIGINT || signal == SIGTERM)
+            {
+                shutdown();
+                break;
+            }
+        }
+    });
 
     _server->Wait();
 
-    std::cout << "Server successfully stopped." << std::endl;
+    stopRequested.store(true);
+    if (signalThread.joinable())
+    {
+        signalThread.join();
+    }
 }
 
 void ServerRunner::shutdown()
 {
-    if (_server)
+    bool expected = false;
+    if (!stopRequested.compare_exchange_strong(expected, true))
     {
-        std::thread([this]() { _server->Shutdown(); }).detach();
+        return;
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(serverMutex);
+        if (_server)
+        {
+            _server->Shutdown();
+        }
     }
 }
 
