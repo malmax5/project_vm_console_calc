@@ -7,6 +7,11 @@ set(CMAKE_CXX_STANDARD 17)
 include(FetchContent)
 
 find_package(PostgreSQL REQUIRED)
+find_package(Protobuf REQUIRED)
+find_package(gRPC REQUIRED)
+
+find_program(_PROTOBUF_PROTOC protoc)
+find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
 
 FetchContent_Declare(
     pvm_math_lib
@@ -40,6 +45,36 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(pvm_math_lib spdlog json fmt googletest)
 
+set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
+set(PROTO_FILE "${CMAKE_CURRENT_SOURCE_DIR}/proto/calculator.proto")
+set(GENERATED_PROTO_SRCS "${PROTO_GEN_DIR}/calculator.pb.cc")
+set(GENERATED_PROTO_HDRS "${PROTO_GEN_DIR}/calculator.pb.h")
+set(GENERATED_GRPC_SRCS "${PROTO_GEN_DIR}/calculator.grpc.pb.cc")
+set(GENERATED_GRPC_HDRS "${PROTO_GEN_DIR}/calculator.grpc.pb.h")
+
+add_custom_command(
+    OUTPUT ${GENERATED_PROTO_SRCS} ${GENERATED_PROTO_HDRS} ${GENERATED_GRPC_SRCS} ${GENERATED_GRPC_HDRS}
+    COMMAND ${_PROTOBUF_PROTOC} --cpp_out=${PROTO_GEN_DIR} --grpc_out=${PROTO_GEN_DIR} --plugin=protoc-gen-grpc=${_GRPC_CPP_PLUGIN_EXECUTABLE} -I ${CMAKE_CURRENT_SOURCE_DIR}/proto ${PROTO_FILE}
+    DEPENDS ${PROTO_FILE}
+    COMMENT "Generating protobuf and gRPC code from ${PROTO_FILE}"
+)
+
+add_library(calc_grpc_proto STATIC
+    ${GENERATED_PROTO_SRCS}
+    ${GENERATED_GRPC_SRCS}
+)
+
+target_include_directories(calc_grpc_proto PUBLIC
+    ${PROTO_GEN_DIR}
+    ${Protobuf_INCLUDE_DIRS}
+    ${gRPC_INCLUDE_DIRS}
+)
+target_link_libraries(calc_grpc_proto PUBLIC
+    gRPC::grpc++
+    protobuf::libprotobuf
+)
+
 add_library(app_logic STATIC
     src/logger/Logger.cpp
     src/parser/JsonParser.cpp
@@ -47,7 +82,8 @@ add_library(app_logic STATIC
     src/calculator/Calculator.cpp
     src/calculator/CachedCalculator.cpp
     src/printer/Printer.cpp
-    src/runner/Runner.cpp
+    src/runner/ConsoleRunner.cpp
+    src/runner/ServerRunner.cpp
     src/models/DbConfig.cpp
     src/infrastructure/ConfigLoader.cpp
     src/infrastructure/ComponentFactory.cpp
@@ -55,6 +91,7 @@ add_library(app_logic STATIC
     src/database/PostgresConnection.cpp
     src/database/repositories/HistoryRepository.cpp
     src/database/repositories/CachedHistoryRepository.cpp
+    src/network/CalculatorServiceImpl.cpp
     src/utils/OperationUtils.cpp
     src/application/CalculatorApp.cpp
 )
@@ -70,6 +107,7 @@ target_link_libraries(app_logic PRIVATE
     nlohmann_json::nlohmann_json
     PostgreSQL::PostgreSQL
     fmt::fmt
+    calc_grpc_proto
 )
 
 add_executable(calculator src/main.cpp)
