@@ -68,7 +68,9 @@ void ServerRunner::shutdown()
 {
     if (_server)
     {
-        _server->Shutdown();
+        std::thread([this]() {
+            _server->Shutdown();
+        }).detach();
     }
 }
 
