@@ -1,11 +1,11 @@
 #include "runner/ServerRunner.hpp"
 
-#include <csignal>
-#include <thread>
 #include <atomic>
-#include <iostream>
-#include <grpcpp/grpcpp.h>
+#include <csignal>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
+#include <grpcpp/grpcpp.h>
+#include <iostream>
+#include <thread>
 
 namespace app_calculator::runner
 {
@@ -14,7 +14,7 @@ namespace
 {
 
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
-std::atomic<ServerRunner*> gServerInstance{nullptr};
+std::atomic<ServerRunner *> gServerInstance{nullptr};
 
 } // namespace
 
@@ -22,13 +22,13 @@ void handleSignal(int signal)
 {
     if (gServerInstance.load() != nullptr)
     {
-        std::cout << "\n[Signal Handler] Received signal " << signal << ", shutting down server...\n";
+        std::cout << "\n[Signal Handler] Received signal " << signal
+                  << ", shutting down server...\n";
         gServerInstance.load()->shutdown();
     }
 }
 
-ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service)
-    : _service(std::move(service))
+ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service) : _service(std::move(service))
 {
     gServerInstance.store(this);
 }
@@ -68,9 +68,7 @@ void ServerRunner::shutdown()
 {
     if (_server)
     {
-        std::thread([this]() {
-            _server->Shutdown();
-        }).detach();
+        std::thread([this]() { _server->Shutdown(); }).detach();
     }
 }
 

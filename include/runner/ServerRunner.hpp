@@ -6,28 +6,28 @@
 
 namespace grpc
 {
-    class Server;
-    class Service;
-}
+class Server;
+class Service;
+} // namespace grpc
 
 namespace app_calculator::runner
 {
 
 class ServerRunner final : public core::IRunner
 {
-public:
+  public:
     ServerRunner(std::shared_ptr<::grpc::Service> service);
     ~ServerRunner() override;
 
-    ServerRunner(const ServerRunner&) = delete;
-    ServerRunner& operator=(const ServerRunner&) = delete;
-    ServerRunner(ServerRunner&&) noexcept = default;
-    ServerRunner& operator=(ServerRunner&&) noexcept = default;
+    ServerRunner(const ServerRunner &) = delete;
+    ServerRunner &operator=(const ServerRunner &) = delete;
+    ServerRunner(ServerRunner &&) noexcept = default;
+    ServerRunner &operator=(ServerRunner &&) noexcept = default;
 
     void run() override;
     void shutdown();
 
-private:
+  private:
     std::shared_ptr<::grpc::Service> _service;
     std::unique_ptr<::grpc::Server> _server;
 };

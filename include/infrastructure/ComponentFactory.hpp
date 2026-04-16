@@ -25,7 +25,7 @@ class ComponentFactory
   public:
     static AppComponents createProductionComponents(const std::string &configPath);
     static std::unique_ptr<core::IRunner> createConsoleRunner(const std::string &configPath,
-      std::string &inputJson);
+                                                              std::string &inputJson);
     static std::unique_ptr<core::IRunner> createServerRunner(const std::string &configPath);
 };
 
