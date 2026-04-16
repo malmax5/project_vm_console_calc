@@ -5,6 +5,8 @@
 #include "core/IPrinter.hpp"
 #include "core/ICalculator.hpp"
 
+#include "models/CalculationResult.hpp"
+
 #include <memory>
 #include <string>
 
@@ -36,7 +38,7 @@ public:
     std::shared_ptr<core::IPrinter> printer;
     std::string serverAddress;
     int timeoutMs;
-    std::string inputJson;
+    models::CalculationTask task;
 };
 
 } // namespace app_calculator::infrastructure
