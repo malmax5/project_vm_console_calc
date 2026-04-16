@@ -6,6 +6,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 
+set(SKIP_INSTALL_ALL ON)
+set(FMT_INSTALL OFF CACHE BOOL "" FORCE)
+set(SPDLOG_INSTALL OFF CACHE BOOL "" FORCE)
+set(JSON_INSTALL OFF CACHE BOOL "" FORCE)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE) # Для GTest
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+
 find_package(PostgreSQL REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(gRPC REQUIRED)
@@ -177,11 +184,32 @@ else()
     message(WARNING "clang-format not found.")
 endif()
 
+option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
+if(ENABLE_TSAN)
+    add_compile_options("-fsanitize=thread")
+    add_link_options("-fsanitize=thread")
+    message(STATUS "ThreadSanitizer enabled")
+endif()
+
 include(GNUInstallDirs)
-install(TARGETS calculator
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS calculator RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES config/config.json DESTINATION /etc/calculator)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/config/app-calculator.service DESTINATION /lib/systemd/system)
+install(DIRECTORY DESTINATION var/log)
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_NAME "app-calculator")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_RELEASE "1")
+set(CPACK_PACKAGE_CONTACT "Author <pochta@gmail.com>")
+set(CPACK_PACKAGE_DESCRIPTION "gRPC Calculator Service")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libgrpc++, libprotobuf32t64, libstdc++6")
+
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "")
+
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+
+include(CPack)
