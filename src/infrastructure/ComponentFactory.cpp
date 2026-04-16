@@ -50,4 +50,14 @@ std::unique_ptr<core::IRunner> ComponentFactory::createConsoleRunner(const std::
         std::move(components.calculator), components.printer, inputJson);
 }
 
+std::unique_ptr<core::IRunner> ComponentFactory::createServerRunner(const std::string &configPath)
+{
+    AppComponents components = createProductionComponents(configPath);
+
+    auto service = std::make_shared<network::CalculatorServiceImpl>(
+        std::move(components.calculator), std::move(components.checker), components.printer);
+
+    return std::make_unique<runner::ServerRunner>(service);
+}
+
 } // namespace app_calculator::infrastructure
