@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package app_calculator.grpc;
+
+message CalculationRequest {
+    string operation = 1;
+    repeated int64 operands = 2;
+}
+
+message CalculationResponse {
+    int64 result = 1;
+    string status = 2;
+}
+
+service CalculatorService {
+    rpc Calculate (CalculationRequest) returns (CalculationResponse); 
+}
