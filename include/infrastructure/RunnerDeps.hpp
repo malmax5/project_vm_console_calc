@@ -36,7 +36,6 @@ struct ClientRunnerDeps
 {
 public:
     std::shared_ptr<core::IPrinter> printer;
-    std::string serverAddress;
     int timeoutMs;
     models::CalculationTask task;
 };
