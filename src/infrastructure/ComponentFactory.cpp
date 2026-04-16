@@ -9,11 +9,11 @@
 #include "infrastructure/ConfigLoader.hpp"
 #include "logger/Logger.hpp"
 #include "models/DbConfig.hpp"
+#include "network/CalculatorServiceImpl.hpp"
 #include "parser/JsonParser.hpp"
 #include "printer/Printer.hpp"
 #include "runner/ConsoleRunner.hpp"
 #include "runner/ServerRunner.hpp"
-#include "network/CalculatorServiceImpl.hpp"
 
 namespace app_calculator::infrastructure
 {
