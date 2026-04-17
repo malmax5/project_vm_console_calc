@@ -36,9 +36,11 @@ struct ClientRunnerDeps
 {
 public:
     std::shared_ptr<core::IPrinter> printer;
+    std::unique_ptr<core::IParser> parser;
+    std::string inputJson;
     std::string serverAddress;
     int timeoutMs = 5000;
-    models::CalculationTask task;
+    
 };
 
 } // namespace app_calculator::infrastructure
