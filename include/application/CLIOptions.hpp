@@ -8,14 +8,15 @@ namespace app_calculator
 
 enum class AppMode
 {
-    SERVER,
-    CONSOLE,
-    CLIENT
+    Server,
+    Console,
+    Client
 };
 
 struct CLIOptions
 {
-    AppMode mode;
+public:
+    AppMode mode = AppMode::Server;
     std::string configPath = "/etc/calculator/config.json";
     std::string serverAddress = "localhost:50051";
     int timeoutMs = 5000;
@@ -25,6 +26,8 @@ struct CLIOptions
     std::vector<long long> operands;
 
     bool verbose = false;
+
+    static CLIOptions parse(int argc, char **argv);
 };
 
 } // namespace app_calculator
