@@ -63,6 +63,24 @@ void CalculatorApp::run(int argc, char **argv)
 
         runner->run();
     }
+    catch (const exceptions::NetworkException &e)
+    {
+        if (_printer)
+        {
+            _printer->printError("Network error: " + std::string(e.what()));
+        }
+
+        return;
+    }
+    catch (const exceptions::AppException &e)
+    {
+        if (_printer)
+        {
+            _printer->printError("Application error: " + std::string(e.what()));
+        }
+
+        return;
+    }
     catch (const std::exception &e)
     {
         if (_printer)
@@ -70,7 +88,7 @@ void CalculatorApp::run(int argc, char **argv)
             _printer->printError("Initialization failed: " + std::string(e.what()));
         }
 
-        throw;
+        return;
     }
     catch (...)
     {
@@ -79,13 +97,13 @@ void CalculatorApp::run(int argc, char **argv)
             _printer->printError("Initialization failed: Unknown error");
         }
 
-        throw;
+        return;
     }
 }
 
 std::string CalculatorApp::getResourcePath(const char *executablePath)
 {
-    const std::string sysConfigPath = "/etc/calculator/config.json";
+    const std::string sysConfigPath = core::configPath;
     if (std::filesystem::exists(sysConfigPath))
     {
         try

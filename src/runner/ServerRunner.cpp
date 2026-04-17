@@ -1,11 +1,10 @@
 #include "runner/ServerRunner.hpp"
 
 #include "core/Constants.hpp"
+#include "core/Exceptions.hpp"
 
 #include <atomic>
 #include <cerrno>
-#include <csignal>
-#include <cstring>
 #include <grpcpp/ext/proto_server_reflection_plugin.h>
 #include <grpcpp/grpcpp.h>
 #include <pthread.h>
@@ -15,7 +14,9 @@
 namespace app_calculator::runner
 {
 
-ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service) : _service(std::move(service))
+ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service,
+                           std::shared_ptr<core::IPrinter> printer)
+    : _service(std::move(service)), _printer(printer)
 {
 }
 
@@ -26,18 +27,90 @@ ServerRunner::~ServerRunner()
 
 void ServerRunner::run()
 {
-    sigset_t set;
-    sigemptyset(&set);
-    sigaddset(&set, SIGINT);
-    sigaddset(&set, SIGTERM);
-    int maskResult = pthread_sigmask(SIG_BLOCK, &set, nullptr);
-    if (maskResult != 0)
+    try
     {
-        throw std::runtime_error("pthread_sigmask failed: " +
-                                 std::string(std::strerror(maskResult)));
+        setupSignalMask();
+        startGrpcServer();
+        startSignalThread();
+
+        if (_server)
+        {
+            _printer->printInfo("gRPC server started on " + serverAddress);
+            _server->Wait();
+        }
+
+        stopRequested.store(true);
+        if (signalThread.joinable())
+        {
+            signalThread.join();
+        }
+    }
+    catch (const exceptions::NetworkException &e)
+    {
+        if (_printer)
+        {
+            _printer->printError(e.what());
+        }
+        throw;
+    }
+    catch (const std::exception &e)
+    {
+        if (_printer)
+        {
+            _printer->printError(std::string("Unexpected error: ") + e.what());
+        }
+        throw exceptions::NetworkException(std::string("ServerRunner encountered an error: ") +
+                                           e.what());
+    }
+    catch (...)
+    {
+        if (_printer)
+        {
+            _printer->printError("An unknown error occurred in ServerRunner.");
+        }
+        throw exceptions::NetworkException("ServerRunner encountered an unknown error.");
+    }
+}
+
+void ServerRunner::shutdown()
+{
+    bool expected = false;
+    if (!stopRequested.compare_exchange_strong(expected, true))
+    {
+        return;
     }
 
-    std::string serverAddress("0.0.0.0:50051");
+    {
+        if (_printer)
+        {
+            _printer->printInfo("Shutdown signal received.");
+        }
+
+        std::lock_guard<std::mutex> lock(serverMutex);
+        if (_server)
+        {
+            _server->Shutdown();
+        }
+    }
+}
+
+void ServerRunner::setupSignalMask()
+{
+    sigemptyset(&signalSet);
+    sigaddset(&signalSet, SIGINT);
+    sigaddset(&signalSet, SIGTERM);
+
+    int maskResult = pthread_sigmask(SIG_BLOCK, &signalSet, nullptr);
+    if (maskResult != 0)
+    {
+        throw exceptions::NetworkException("pthread_sigmask failed: " +
+                                           std::string(std::strerror(maskResult)));
+    }
+}
+
+void ServerRunner::startGrpcServer()
+{
+    serverAddress = core::defaultServerAddress;
     ::grpc::ServerBuilder builder;
 
     ::grpc::reflection::InitProtoReflectionServerBuilderPlugin();
@@ -48,21 +121,36 @@ void ServerRunner::run()
     _server = builder.BuildAndStart();
     if (!_server)
     {
-        throw std::runtime_error("Failed to start gRPC server");
+        throw exceptions::GrpcException("Failed to start gRPC server");
     }
+}
 
+void ServerRunner::startSignalThread()
+{
     signalThread = std::thread(
-        [this, set]() mutable
+        [this]() mutable
         {
             timespec timeout{0, core::signalWaitNanoseconds};
             while (!stopRequested.load())
             {
-                int signal = sigtimedwait(&set, nullptr, &timeout);
+                int signal = sigtimedwait(&signalSet, nullptr, &timeout);
                 if (signal == -1)
                 {
                     if (errno == EAGAIN || errno == EINTR)
                     {
                         continue;
+                    }
+
+                    shutdown();
+                    break;
+                }
+
+                if (signal == -1 && errno != EAGAIN && errno != EINTR)
+                {
+                    if (_printer)
+                    {
+                        _printer->printError(std::string("sigtimedwait failed: ") +
+                                             std::strerror(errno));
                     }
 
                     shutdown();
@@ -76,31 +164,6 @@ void ServerRunner::run()
                 }
             }
         });
-
-    _server->Wait();
-
-    stopRequested.store(true);
-    if (signalThread.joinable())
-    {
-        signalThread.join();
-    }
-}
-
-void ServerRunner::shutdown()
-{
-    bool expected = false;
-    if (!stopRequested.compare_exchange_strong(expected, true))
-    {
-        return;
-    }
-
-    {
-        std::lock_guard<std::mutex> lock(serverMutex);
-        if (_server)
-        {
-            _server->Shutdown();
-        }
-    }
 }
 
 } // namespace app_calculator::runner
