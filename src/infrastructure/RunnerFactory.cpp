@@ -14,7 +14,7 @@ std::unique_ptr<core::IRunner> RunnerFactory::createServerRunner(ServerRunnerDep
 {
     auto service = std::make_shared<network::CalculatorServiceImpl>(
         std::move(deps.calculator), std::move(deps.checker), deps.printer);
-    return std::make_unique<runner::ServerRunner>(service);
+    return std::make_unique<runner::ServerRunner>(service, deps.printer);
 }
 
 std::unique_ptr<core::IRunner> RunnerFactory::createConsoleRunner(ConsoleRunnerDeps &deps)

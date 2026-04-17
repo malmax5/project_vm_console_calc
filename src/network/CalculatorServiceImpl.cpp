@@ -42,22 +42,22 @@ CalculatorServiceImpl::Calculate(::grpc::ServerContext *context,
     catch (const exceptions::ValidationException &validationException)
     {
         response->set_status(std::string("Validation error: ") + validationException.what());
-        return ::grpc::Status::OK;
+        return ::grpc::Status(::grpc::StatusCode::INVALID_ARGUMENT, validationException.what());
     }
     catch (const exceptions::CalculationException &calculationException)
     {
         response->set_status(std::string("Calculation error: ") + calculationException.what());
-        return ::grpc::Status::OK;
+        return ::grpc::Status(::grpc::StatusCode::FAILED_PRECONDITION, calculationException.what());
     }
     catch (const std::exception &exception)
     {
         response->set_status(std::string("Error: ") + exception.what());
-        return ::grpc::Status::OK;
+        return ::grpc::Status(::grpc::StatusCode::INTERNAL, exception.what());
     }
     catch (...)
     {
         response->set_status("Unknown error occurred.");
-        return ::grpc::Status::OK;
+        return ::grpc::Status(::grpc::StatusCode::UNKNOWN, "Unknown error occurred.");
     }
 }
 
