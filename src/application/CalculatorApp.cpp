@@ -65,11 +65,6 @@ void CalculatorApp::run(int argc, char **argv)
     }
     catch (const exceptions::NetworkException &e)
     {
-        if (_printer)
-        {
-            _printer->printError("Network error: " + std::string(e.what()));
-        }
-
         return;
     }
     catch (const exceptions::AppException &e)
