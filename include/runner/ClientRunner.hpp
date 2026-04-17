@@ -19,7 +19,7 @@ namespace app_calculator::runner
 class ClientRunner final : public core::IRunner
 {
   public:
-    explicit ClientRunner(std::shared_ptr<::grpc::Channel> channel, const infrastructure::ClientRunnerDeps &deps);
+    explicit ClientRunner(std::shared_ptr<::grpc::Channel> channel, infrastructure::ClientRunnerDeps &deps);
     ~ClientRunner() override;
 
     ClientRunner(const ClientRunner &) = delete;
@@ -31,9 +31,10 @@ class ClientRunner final : public core::IRunner
 
   private:
     std::unique_ptr<::app_calculator::grpc::CalculatorService::Stub> _stub;
+    std::unique_ptr<core::IParser> _parser;
     std::shared_ptr<core::IPrinter> _printer;
+    std::string inputJson;
     int _timeoutMs;
-    models::CalculationTask _task;
 };
 
 } // namespace app_calculator::runner

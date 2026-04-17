@@ -1,17 +1,19 @@
 #include "runner/ClientRunner.hpp"
 
+#include "models/CalculationTask.hpp"
+
 #include <grpcpp/channel.h>
-#include <iostream>
 #include <chrono>
 
 namespace app_calculator::runner
 {
 
-ClientRunner::ClientRunner(std::shared_ptr<::grpc::Channel> channel, const infrastructure::ClientRunnerDeps &deps)
+ClientRunner::ClientRunner(std::shared_ptr<::grpc::Channel> channel, infrastructure::ClientRunnerDeps &deps)
     : _stub(::app_calculator::grpc::CalculatorService::NewStub(channel))
     , _printer(deps.printer)
+    , _parser(std::move(deps.parser))
+    , inputJson(deps.inputJson)
     , _timeoutMs(deps.timeoutMs)
-    , _task(deps.task)
 {
 }
 
@@ -22,16 +24,22 @@ ClientRunner::~ClientRunner()
 void ClientRunner::run()
 {
     ::app_calculator::grpc::CalculationRequest request;
-    request.set_operation(_task.operation);
-    for (const auto &operand : _task.operands)
+
+    models::CalculationTask task = _parser->parse(inputJson);
+
+    request.set_operation(task.operation);
+    for (const auto &operand : task.operands)
     {
         request.add_operands(operand);
     }
 
     ::app_calculator::grpc::CalculationResponse response;
     ::grpc::ClientContext context;
-    auto deadline = std::chrono::system_clock::now() + std::chrono::milliseconds(_timeoutMs);
-    context.set_deadline(deadline);
+    if (_timeoutMs > 0)
+    {
+        auto deadline = std::chrono::system_clock::now() + std::chrono::milliseconds(_timeoutMs);
+        context.set_deadline(deadline);
+    }
 
     _printer->printInfo("[Client] Connecting to server...");
     ::grpc::Status status = _stub->Calculate(&context, request, &response);

@@ -27,7 +27,12 @@ CLIOptions CLIOptions::parse(int argc, char **argv)
             options.mode = AppMode::Client;
             if (argc > 2)
             {
-                options.serverAddress = argv[2];
+                options.inputJson = argv[2];
+            }
+
+            if (argc > 3)
+            {
+                options.serverAddress = argv[3];
             }
         }
     }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "models/CalculationTask.hpp"
+
 #include <string>
 #include <vector>
 
@@ -22,8 +24,6 @@ public:
     int timeoutMs = 5000;
 
     std::string inputJson;
-    std::string operation;
-    std::vector<long long> operands;
 
     bool verbose = false;
 
