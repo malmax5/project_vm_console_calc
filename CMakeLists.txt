@@ -92,9 +92,13 @@ add_library(app_logic STATIC
     src/printer/Printer.cpp
     src/runner/ConsoleRunner.cpp
     src/runner/ServerRunner.cpp
+    src/runner/ClientRunner.cpp
     src/models/DbConfig.cpp
-    src/infrastructure/ConfigLoader.cpp
+    src/infrastructure/AppContext.cpp
     src/infrastructure/ComponentFactory.cpp
+    src/infrastructure/ConfigLoader.cpp
+    src/infrastructure/RunnerDeps.cpp
+    src/infrastructure/RunnerFactory.cpp
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
     src/database/repositories/HistoryRepository.cpp
@@ -102,6 +106,7 @@ add_library(app_logic STATIC
     src/network/CalculatorServiceImpl.cpp
     src/utils/OperationUtils.cpp
     src/application/CalculatorApp.cpp
+    src/application/CLIOptions.cpp
 )
 
 target_include_directories(app_logic PUBLIC

@@ -6,8 +6,8 @@ After=network.target postgresql.service
 ExecStart=/usr/bin/calculator --server
 Restart=on-failure
 User=root
-StandartOutput=append:/var/log/app_calculator.log
-StandartError=inherit
+StandardOutput=append:/var/log/app_calculator.log
+StandardError=inherit
 
 [Install]
 WantedBy=multi-user.target
