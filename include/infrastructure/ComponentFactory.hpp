@@ -1,8 +1,8 @@
 #pragma once
 
+#include "application/CLIOptions.hpp"
 #include "infrastructure/AppContext.hpp"
 #include "infrastructure/RunnerDeps.hpp"
-#include "application/CLIOptions.hpp"
 
 #include <memory>
 

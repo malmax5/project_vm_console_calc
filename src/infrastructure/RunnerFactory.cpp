@@ -1,16 +1,19 @@
 #include "infrastructure/RunnerFactory.hpp"
 
+#include "network/CalculatorServiceImpl.hpp"
 #include "runner/ClientRunner.hpp"
 #include "runner/ConsoleRunner.hpp"
 #include "runner/ServerRunner.hpp"
-#include "network/CalculatorServiceImpl.hpp"
+
+#include <grpcpp/create_channel.h>
 
 namespace app_calculator::infrastructure
 {
 
 std::unique_ptr<core::IRunner> RunnerFactory::createServerRunner(ServerRunnerDeps &deps)
 {
-    auto service = std::make_shared<network::CalculatorServiceImpl>(std::move(deps.calculator), std::move(deps.checker), deps.printer);
+    auto service = std::make_shared<network::CalculatorServiceImpl>(
+        std::move(deps.calculator), std::move(deps.checker), deps.printer);
     return std::make_unique<runner::ServerRunner>(service);
 }
 

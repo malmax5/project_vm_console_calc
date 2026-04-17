@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Constants.hpp"
 #include "models/CalculationTask.hpp"
 
 #include <string>
@@ -10,18 +11,18 @@ namespace app_calculator
 
 enum class AppMode
 {
-    Server,
-    Console,
-    Client
+    server,
+    console,
+    client
 };
 
 struct CLIOptions
 {
-public:
-    AppMode mode = AppMode::Server;
+  public:
+    AppMode mode = AppMode::server;
     std::string configPath = "/etc/calculator/config.json";
     std::string serverAddress = "localhost:50051";
-    int timeoutMs = 5000;
+    int timeoutMs = core::defaultTimeoutMs;
 
     std::string inputJson;
 

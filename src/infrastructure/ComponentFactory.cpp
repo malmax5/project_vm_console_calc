@@ -21,7 +21,7 @@ namespace app_calculator::infrastructure
 AppContext ComponentFactory::createApplicationContext()
 {
     AppContext context;
-    
+
     context.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
 
     return context;
@@ -57,7 +57,7 @@ ServerRunnerDeps ComponentFactory::createServerRunnerComponents(const CLIOptions
 
     models::DbConfig config =
         infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(options.configPath);
-    
+
     auto dbConnection = std::make_shared<database::PostgresConnection>(config.connectionString());
     auto historyRepository = std::make_unique<database::HistoryRepository>(dbConnection);
 

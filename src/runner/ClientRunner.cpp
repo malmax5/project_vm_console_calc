@@ -2,18 +2,16 @@
 
 #include "models/CalculationTask.hpp"
 
-#include <grpcpp/channel.h>
 #include <chrono>
+#include <grpcpp/channel.h>
 
 namespace app_calculator::runner
 {
 
-ClientRunner::ClientRunner(std::shared_ptr<::grpc::Channel> channel, infrastructure::ClientRunnerDeps &deps)
-    : _stub(::app_calculator::grpc::CalculatorService::NewStub(channel))
-    , _printer(deps.printer)
-    , _parser(std::move(deps.parser))
-    , inputJson(deps.inputJson)
-    , _timeoutMs(deps.timeoutMs)
+ClientRunner::ClientRunner(std::shared_ptr<::grpc::Channel> channel,
+                           infrastructure::ClientRunnerDeps &deps)
+    : _stub(::app_calculator::grpc::CalculatorService::NewStub(channel)), _printer(deps.printer),
+      _parser(std::move(deps.parser)), inputJson(deps.inputJson), _timeoutMs(deps.timeoutMs)
 {
 }
 
@@ -51,7 +49,9 @@ void ClientRunner::run()
     }
     else
     {
-        _printer->printError("[Client] RPC failed: " + "code=" + std::to_string(static_cast<int>(status.error_code())) + ", name=" + ::grpc::StatusCodeToString(status.error_code()) + ", message=" + status.error_message());
+        _printer->printError(std::string("[Client] RPC failed: code=") +
+                             std::to_string(static_cast<int>(status.error_code())) +
+                             ", message=" + status.error_message());
     }
 }
 

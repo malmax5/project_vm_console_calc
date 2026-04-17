@@ -6,17 +6,17 @@ namespace app_calculator
 CLIOptions CLIOptions::parse(int argc, char **argv)
 {
     CLIOptions options;
-    
+
     if (argc > 1)
     {
         std::string modeArg(argv[1]);
         if (modeArg == "--server")
         {
-            options.mode = AppMode::Server;
+            options.mode = AppMode::server;
         }
         else if (modeArg == "--console")
         {
-            options.mode = AppMode::Console;
+            options.mode = AppMode::console;
             if (argc > 2)
             {
                 options.inputJson = argv[2];
@@ -24,7 +24,7 @@ CLIOptions CLIOptions::parse(int argc, char **argv)
         }
         else if (modeArg == "--client")
         {
-            options.mode = AppMode::Client;
+            options.mode = AppMode::client;
             if (argc > 2)
             {
                 options.inputJson = argv[2];

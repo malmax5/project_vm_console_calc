@@ -2,10 +2,10 @@
 
 #include "core/IRunner.hpp"
 
-#include <memory>
-#include <thread>
 #include <atomic>
+#include <memory>
 #include <mutex>
+#include <thread>
 
 namespace grpc
 {

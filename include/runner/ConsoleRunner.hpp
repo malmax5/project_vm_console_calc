@@ -11,7 +11,7 @@ namespace app_calculator::runner
 class ConsoleRunner final : public core::IRunner
 {
   public:
-    explicit ConsoleRunner(ConsoleRunnerDeps &deps);
+    explicit ConsoleRunner(infrastructure::ConsoleRunnerDeps &deps);
     ~ConsoleRunner() override;
 
     ConsoleRunner(const ConsoleRunner &) = delete;

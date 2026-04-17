@@ -19,7 +19,8 @@ namespace app_calculator::runner
 class ClientRunner final : public core::IRunner
 {
   public:
-    explicit ClientRunner(std::shared_ptr<::grpc::Channel> channel, infrastructure::ClientRunnerDeps &deps);
+    explicit ClientRunner(std::shared_ptr<::grpc::Channel> channel,
+                          infrastructure::ClientRunnerDeps &deps);
     ~ClientRunner() override;
 
     ClientRunner(const ClientRunner &) = delete;

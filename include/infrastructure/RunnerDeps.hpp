@@ -1,9 +1,10 @@
 #pragma once
 
-#include "core/IParser.hpp"
-#include "core/IChecker.hpp"
-#include "core/IPrinter.hpp"
+#include "core/Constants.hpp"
 #include "core/ICalculator.hpp"
+#include "core/IChecker.hpp"
+#include "core/IParser.hpp"
+#include "core/IPrinter.hpp"
 
 #include <memory>
 #include <string>
@@ -13,7 +14,7 @@ namespace app_calculator::infrastructure
 
 struct ServerRunnerDeps
 {
-public:
+  public:
     std::shared_ptr<core::IPrinter> printer;
     std::unique_ptr<core::IChecker> checker;
     std::unique_ptr<core::ICalculator> calculator;
@@ -21,7 +22,7 @@ public:
 
 struct ConsoleRunnerDeps
 {
-public:
+  public:
     std::shared_ptr<core::IPrinter> printer;
     std::unique_ptr<core::IParser> parser;
     std::unique_ptr<core::IChecker> checker;
@@ -32,13 +33,12 @@ public:
 
 struct ClientRunnerDeps
 {
-public:
+  public:
     std::shared_ptr<core::IPrinter> printer;
     std::unique_ptr<core::IParser> parser;
     std::string inputJson;
     std::string serverAddress;
-    int timeoutMs;
-    
+    int timeoutMs = core::defaultTimeoutMs;
 };
 
 } // namespace app_calculator::infrastructure

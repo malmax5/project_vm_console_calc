@@ -11,9 +11,9 @@
 namespace app_calculator::runner
 {
 
-ConsoleRunner::ConsoleRunner(ConsoleRunnerDeps &deps)
-    : _parser(std::move(deps.parser)), _checker(std::move(deps.checker)), _calculator(std::move(deps.calculator)),
-      _printer(deps.printer), _inputJson(deps.inputJson)
+ConsoleRunner::ConsoleRunner(infrastructure::ConsoleRunnerDeps &deps)
+    : _parser(std::move(deps.parser)), _checker(std::move(deps.checker)),
+      _calculator(std::move(deps.calculator)), _printer(deps.printer), _inputJson(deps.inputJson)
 {
 }
 

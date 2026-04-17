@@ -1,5 +1,7 @@
 #include "runner/ServerRunner.hpp"
 
+#include "core/Constants.hpp"
+
 #include <atomic>
 #include <cerrno>
 #include <csignal>
@@ -31,7 +33,8 @@ void ServerRunner::run()
     int maskResult = pthread_sigmask(SIG_BLOCK, &set, nullptr);
     if (maskResult != 0)
     {
-        throw std::runtime_error("pthread_sigmask failed: " + std::string(std::strerror(maskResult)));
+        throw std::runtime_error("pthread_sigmask failed: " +
+                                 std::string(std::strerror(maskResult)));
     }
 
     std::string serverAddress("0.0.0.0:50051");
@@ -48,29 +51,31 @@ void ServerRunner::run()
         throw std::runtime_error("Failed to start gRPC server");
     }
 
-    signalThread = std::thread([this, set]() mutable {
-        timespec timeout{0, 300'000'000};
-        while (!stopRequested.load())
+    signalThread = std::thread(
+        [this, set]() mutable
         {
-            int signal = sigtimedwait(&set, nullptr, &timeout);
-            if (signal == -1)
+            timespec timeout{0, core::signalWaitNanoseconds};
+            while (!stopRequested.load())
             {
-                if (errno == EAGAIN || errno == EINTR)
+                int signal = sigtimedwait(&set, nullptr, &timeout);
+                if (signal == -1)
                 {
-                    continue;
+                    if (errno == EAGAIN || errno == EINTR)
+                    {
+                        continue;
+                    }
+
+                    shutdown();
+                    break;
                 }
 
-                shutdown();
-                break;
+                if (signal == SIGINT || signal == SIGTERM)
+                {
+                    shutdown();
+                    break;
+                }
             }
-
-            if (signal == SIGINT || signal == SIGTERM)
-            {
-                shutdown();
-                break;
-            }
-        }
-    });
+        });
 
     _server->Wait();
 

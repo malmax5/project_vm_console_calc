@@ -1,8 +1,8 @@
 #pragma once
 
+#include "core/IRunner.hpp"
 #include "infrastructure/AppContext.hpp"
 #include "infrastructure/RunnerDeps.hpp"
-#include "core/IRunner.hpp"
 
 namespace app_calculator::infrastructure
 {
