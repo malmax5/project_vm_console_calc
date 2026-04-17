@@ -20,8 +20,8 @@ struct CLIOptions
 {
   public:
     AppMode mode = AppMode::server;
-    std::string configPath = "/etc/calculator/config.json";
-    std::string serverAddress = "localhost:50051";
+    std::string configPath = core::configPath;
+    std::string serverAddress = core::defaultServerAddress;
     int timeoutMs = core::defaultTimeoutMs;
 
     std::string inputJson;

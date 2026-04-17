@@ -1,5 +1,7 @@
 #include "application/CLIOptions.hpp"
 
+#include "core/Exceptions.hpp"
+
 namespace app_calculator
 {
 
@@ -34,6 +36,11 @@ CLIOptions CLIOptions::parse(int argc, char **argv)
             {
                 options.serverAddress = argv[3];
             }
+        }
+        else
+        {
+            throw exceptions::ConfigException(
+                "App mode (--server/--client/--console) must be specified.");
         }
     }
 
