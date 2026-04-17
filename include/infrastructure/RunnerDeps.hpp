@@ -5,8 +5,6 @@
 #include "core/IPrinter.hpp"
 #include "core/ICalculator.hpp"
 
-#include "models/CalculationResult.hpp"
-
 #include <memory>
 #include <string>
 
@@ -39,7 +37,7 @@ public:
     std::unique_ptr<core::IParser> parser;
     std::string inputJson;
     std::string serverAddress;
-    int timeoutMs = 5000;
+    int timeoutMs;
     
 };
 

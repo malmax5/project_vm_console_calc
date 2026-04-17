@@ -1,8 +1,9 @@
 #include "application/CalculatorApp.hpp"
 
-#include "core/Exceptions.hpp"
-#include "core/IRunner.hpp"
+#include "application/CLIOptions.hpp"
 #include "infrastructure/ComponentFactory.hpp"
+#include "infrastructure/RunnerFactory.hpp"
+#include "core/Exceptions.hpp"
 
 #include <filesystem>
 
@@ -13,29 +14,47 @@ void CalculatorApp::run(int argc, char **argv)
 {
     try
     {
-        std::string configPath = getResourcePath(argv[0]);
-        auto components = infrastructure::ComponentFactory::createProductionComponents(configPath);
-        _printer = components.printer;
+        CLIOptions options = CLIOptions::parse(argc, argv);
+        
+        if (options.configPath.empty())
+        {
+            std::string configPath = getResourcePath(argv[0]);
+            options.configPath = configPath;
+        }
+
+        {
+            auto components = infrastructure::ComponentFactory::createProductionContext(configPath);
+            _printer = components.printer;
+        }
 
         _printer->printInfo("Application started");
-        _printer->printInfo("Target config path: " + configPath);
 
         std::unique_ptr<core::IRunner> runner;
-
-        if (argc > 1 && std::string(argv[1]) == "--server")
+        switch (options.mode)
         {
+        case AppMode::Server:
             _printer->printInfo("Mode: SERVER");
-            runner = infrastructure::ComponentFactory::createServerRunner(configPath);
-        }
-        else if (argc > 1 && std::string(argv[1]) == "--console")
-        {
+            {
+                infrastructure::ServerRunnerDeps deps = infrastructure::ComponentFactory::createServerRunnerComponents(options);
+                runner = infrastructure::RunnerFactory::createServerRunner(deps);
+            }
+            break;
+        case AppMode::Console:
             _printer->printInfo("Mode: CONSOLE");
-            std::string inputJson = std::string(argv[2]);
-            runner = infrastructure::ComponentFactory::createConsoleRunner(configPath, inputJson);
-        }
-        else
-        {
-            throw exceptions::ConfigException("Invalid mode specified. Use --server or --console.");
+            {
+                infrastructure::ConsoleRunnerDeps deps = infrastructure::ComponentFactory::createConsoleRunnerComponents(options);
+                runner = infrastructure::RunnerFactory::createConsoleRunner(deps);
+            }
+            break;
+        case AppMode::Client:
+            _printer->printInfo("Mode: CLIENT");
+            {
+                infrastructure::ClientRunnerDeps deps = infrastructure::ComponentFactory::createClientRunnerComponents(options);
+                runner = infrastructure::RunnerFactory::createClientRunner(deps);
+            }
+            break;
+        default:
+            throw exceptions::ConfigException("Invalid mode specified. Use --server, --console, or --client.");
         }
 
         runner->run();
