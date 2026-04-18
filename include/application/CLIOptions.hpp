@@ -11,24 +11,23 @@ namespace app_calculator
 
 enum class AppMode
 {
-    server,
-    console,
-    client
+  unknown,
+  server,
+  console,
+  client
 };
 
 struct CLIOptions
 {
   public:
-    AppMode mode = AppMode::server;
-    std::string configPath = core::configPath;
-    std::string serverAddress = core::defaultServerAddress;
-    int timeoutMs = core::defaultTimeoutMs;
+  AppMode mode = AppMode::unknown;
+  std::string configPath = core::configPath;
+  std::string address;
+  int timeoutMs = core::defaultTimeoutMs;
+  std::string inputJson;
+  bool verbose = false;
 
-    std::string inputJson;
-
-    bool verbose = false;
-
-    static CLIOptions parse(int argc, char **argv);
+  static CLIOptions parse(int argc, char **argv);
 };
 
 } // namespace app_calculator

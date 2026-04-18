@@ -18,6 +18,7 @@ struct ServerRunnerDeps
     std::shared_ptr<core::IPrinter> printer;
     std::unique_ptr<core::IChecker> checker;
     std::unique_ptr<core::ICalculator> calculator;
+    std::string address = core::defaultServerAddress;
 };
 
 struct ConsoleRunnerDeps
@@ -37,7 +38,7 @@ struct ClientRunnerDeps
     std::shared_ptr<core::IPrinter> printer;
     std::unique_ptr<core::IParser> parser;
     std::string inputJson;
-    std::string serverAddress;
+    std::string address = core::defaultClientAddress;
     int timeoutMs = core::defaultTimeoutMs;
 };
 

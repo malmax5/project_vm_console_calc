@@ -55,6 +55,11 @@ ServerRunnerDeps ComponentFactory::createServerRunnerComponents(const CLIOptions
 {
     ServerRunnerDeps deps;
 
+    if (!options.address.empty())
+    {
+        deps.address = options.address;
+    }
+
     models::DbConfig config =
         infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(options.configPath);
 
@@ -77,10 +82,15 @@ ClientRunnerDeps ComponentFactory::createClientRunnerComponents(const CLIOptions
 {
     ClientRunnerDeps deps;
 
+    if (!options.address.empty())
+    {
+        deps.address = options.address;
+    }
+
     deps.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
     deps.parser = std::make_unique<parser::JsonParser>();
     deps.inputJson = options.inputJson;
-    deps.serverAddress = options.serverAddress;
+    deps.address = options.address;
     deps.timeoutMs = options.timeoutMs;
 
     return deps;

@@ -2,6 +2,10 @@
 
 #include "core/Exceptions.hpp"
 
+#include <getopt.h>
+#include <cstring>
+#include <iostream>
+
 namespace app_calculator
 {
 
@@ -9,39 +13,73 @@ CLIOptions CLIOptions::parse(int argc, char **argv)
 {
     CLIOptions options;
 
-    if (argc > 1)
-    {
-        std::string modeArg(argv[1]);
-        if (modeArg == "--server")
-        {
-            options.mode = AppMode::server;
-        }
-        else if (modeArg == "--console")
-        {
-            options.mode = AppMode::console;
-            if (argc > 2)
-            {
-                options.inputJson = argv[2];
-            }
-        }
-        else if (modeArg == "--client")
-        {
-            options.mode = AppMode::client;
-            if (argc > 2)
-            {
-                options.inputJson = argv[2];
-            }
+    static struct option longOptions[] = {
+        {"server",  no_argument,       0,  's' },
+        {"console", no_argument,       0,  'c' },
+        {"client",  no_argument,       0,  'l' },
+        {"address", required_argument, 0,  'a' },
+        {"config",  required_argument, 0,  'f' },
+        {"verbose", no_argument,       0,  'v' },
+        {0,         0,                 0,   0  }
+    };
 
-            if (argc > 3)
-            {
-                options.serverAddress = argv[3];
-            }
-        }
-        else
+    int opt = 0;
+    int longIndex = 0;
+
+    optind = 1;
+    while ((opt = getopt_long(argc, argv, "sclva:f:", longOptions, &longIndex)) != -1)
+    {
+        switch (opt)
         {
-            throw exceptions::ConfigException(
-                "App mode (--server/--client/--console) must be specified.");
+        case 's':
+            options.mode = AppMode::server;
+            break;
+        case 'c':
+            options.mode = AppMode::console;
+            break;
+        case 'l':
+            options.mode = AppMode::client;
+            break;
+        case 'a':
+            if (optarg != nullptr)
+            {
+                options.address = optarg;
+            }
+            break;
+        case 'f':
+            if (optarg != nullptr)
+            {
+                options.configPath = optarg;
+            }
+            break;
+        case 'v':
+            options.verbose = true;
+            break;
+        default:
+            throw exceptions::ConfigException("Unknown command line option.");
         }
+    }
+
+    if (optind < argc)
+    {
+        options.inputJson = argv[optind];
+    }
+
+    if (options.address.empty())
+    {
+        if (options.mode == AppMode::server)
+        {
+            options.address = core::defaultServerAddress;
+        }
+        else if (options.mode == AppMode::client)
+        {
+            options.address = core::defaultClientAddress;
+        }
+    }
+
+    if (options.mode == AppMode::unknown)
+    {
+        throw exceptions::ConfigException("App mode (--server/--client/--console) must be specified.");
     }
 
     return options;
