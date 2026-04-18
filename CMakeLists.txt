@@ -210,7 +210,7 @@ set(CPACK_PACKAGE_CONTACT "Author <pochta@gmail.com>")
 set(CPACK_PACKAGE_DESCRIPTION "gRPC Calculator Service")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libgrpc++, libprotobuf32t64, libstdc++6")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libgrpc++-dev, libprotobuf32t64, libstdc++6")
 
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "")
 
