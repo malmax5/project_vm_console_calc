@@ -15,8 +15,9 @@ namespace app_calculator::runner
 {
 
 ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service,
-                           std::shared_ptr<core::IPrinter> printer)
-    : _service(std::move(service)), _printer(printer)
+                           std::shared_ptr<core::IPrinter> printer,
+                           std::string address)
+    : _service(std::move(service)), _printer(printer), serverAddress(address)
 {
 }
 
@@ -110,7 +111,6 @@ void ServerRunner::setupSignalMask()
 
 void ServerRunner::startGrpcServer()
 {
-    serverAddress = core::defaultServerAddress;
     ::grpc::ServerBuilder builder;
 
     ::grpc::reflection::InitProtoReflectionServerBuilderPlugin();

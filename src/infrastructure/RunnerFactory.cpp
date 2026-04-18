@@ -14,7 +14,7 @@ std::unique_ptr<core::IRunner> RunnerFactory::createServerRunner(ServerRunnerDep
 {
     auto service = std::make_shared<network::CalculatorServiceImpl>(
         std::move(deps.calculator), std::move(deps.checker), deps.printer);
-    return std::make_unique<runner::ServerRunner>(service, deps.printer);
+    return std::make_unique<runner::ServerRunner>(service, deps.printer, deps.address);
 }
 
 std::unique_ptr<core::IRunner> RunnerFactory::createConsoleRunner(ConsoleRunnerDeps &deps)
@@ -24,7 +24,7 @@ std::unique_ptr<core::IRunner> RunnerFactory::createConsoleRunner(ConsoleRunnerD
 
 std::unique_ptr<core::IRunner> RunnerFactory::createClientRunner(ClientRunnerDeps &deps)
 {
-    auto channel = ::grpc::CreateChannel(deps.serverAddress, ::grpc::InsecureChannelCredentials());
+    auto channel = ::grpc::CreateChannel(deps.address, ::grpc::InsecureChannelCredentials());
     return std::make_unique<runner::ClientRunner>(channel, deps);
 }
 

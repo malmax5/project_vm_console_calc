@@ -22,7 +22,7 @@ namespace app_calculator::runner
 class ServerRunner final : public core::IRunner
 {
   public:
-    ServerRunner(std::shared_ptr<::grpc::Service> service, std::shared_ptr<core::IPrinter> printer);
+    ServerRunner(std::shared_ptr<::grpc::Service> service, std::shared_ptr<core::IPrinter> printer, std::string address);
     ~ServerRunner() override;
 
     ServerRunner(const ServerRunner &) = delete;
