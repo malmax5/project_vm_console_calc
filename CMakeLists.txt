@@ -4,13 +4,30 @@ project(ConsoleCalc LANGUAGES CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 
+option(USE_THREAD_SANITIZER "Enable ThreadSanitizer" OFF)
+option(USE_ADDRESS_SANITIZER "Enable AddressSanitizer" OFF)
+
+if(USE_THREAD_SANITIZER AND USE_ADDRESS_SANITIZER)
+    message(FATAL_ERROR "Cannot enable both ThreadSanitizer and AddressSanitizer at the same time!")
+endif()
+
+if(USE_THREAD_SANITIZER)
+    add_compile_options(-fsanitize=thread)
+    add_link_options(-fsanitize=thread)
+    message(STATUS "ThreadSanitizer enabled")
+elseif(USE_ADDRESS_SANITIZER)
+    add_compile_options(-fsanitize=address)
+    add_link_options(-fsanitize=address)
+    message(STATUS "AddressSanitizer enabled")
+endif()
+
 include(FetchContent)
 
 set(SKIP_INSTALL_ALL ON)
 set(FMT_INSTALL OFF CACHE BOOL "" FORCE)
 set(SPDLOG_INSTALL OFF CACHE BOOL "" FORCE)
 set(JSON_INSTALL OFF CACHE BOOL "" FORCE)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE) # Для GTest
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 
 find_package(PostgreSQL REQUIRED)
@@ -192,13 +209,6 @@ if(CLANG_FORMAT_EXE)
     message(STATUS "clang-format found.")
 else()
     message(WARNING "clang-format not found.")
-endif()
-
-option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
-if(ENABLE_TSAN)
-    add_compile_options("-fsanitize=thread")
-    add_link_options("-fsanitize=thread")
-    message(STATUS "ThreadSanitizer enabled")
 endif()
 
 include(GNUInstallDirs)
