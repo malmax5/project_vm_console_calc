@@ -6,10 +6,9 @@
 namespace app_calculator::core
 {
 
-template <typename TResult>
-class IDbAccessor
+template <typename TResult> class IDbAccessor
 {
-public:
+  public:
     IDbAccessor() = default;
     virtual ~IDbAccessor() = default;
 
@@ -19,7 +18,8 @@ public:
     IDbAccessor &operator=(IDbAccessor &&) noexcept = default;
 
     virtual TResult execute(const std::string &query) = 0;
-    virtual TResult executeParams(const std::string &query, const std::vector<const char *> &params) = 0;
+    virtual TResult executeParams(const std::string &query,
+                                  const std::vector<const char *> &params) = 0;
 };
 
-}
+} // namespace app_calculator::core

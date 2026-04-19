@@ -2,8 +2,8 @@
 
 #include "core/Exceptions.hpp"
 
-#include <getopt.h>
 #include <cstring>
+#include <getopt.h>
 #include <iostream>
 
 namespace app_calculator
@@ -13,15 +13,13 @@ CLIOptions CLIOptions::parse(int argc, char **argv)
 {
     CLIOptions options;
 
-    static struct option longOptions[] = {
-        {"server",  no_argument,       0,  's' },
-        {"console", no_argument,       0,  'c' },
-        {"client",  no_argument,       0,  'l' },
-        {"address", required_argument, 0,  'a' },
-        {"config",  required_argument, 0,  'f' },
-        {"verbose", no_argument,       0,  'v' },
-        {0,         0,                 0,   0  }
-    };
+    static struct option longOptions[] = {{"server", no_argument, 0, 's'},
+                                          {"console", no_argument, 0, 'c'},
+                                          {"client", no_argument, 0, 'l'},
+                                          {"address", required_argument, 0, 'a'},
+                                          {"config", required_argument, 0, 'f'},
+                                          {"verbose", no_argument, 0, 'v'},
+                                          {0, 0, 0, 0}};
 
     int opt = 0;
     int longIndex = 0;
@@ -79,7 +77,8 @@ CLIOptions CLIOptions::parse(int argc, char **argv)
 
     if (options.mode == AppMode::unknown)
     {
-        throw exceptions::ConfigException("App mode (--server/--client/--console) must be specified.");
+        throw exceptions::ConfigException(
+            "App mode (--server/--client/--console) must be specified.");
     }
 
     return options;

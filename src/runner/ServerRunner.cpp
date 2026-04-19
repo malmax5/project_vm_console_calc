@@ -15,8 +15,7 @@ namespace app_calculator::runner
 {
 
 ServerRunner::ServerRunner(std::shared_ptr<::grpc::Service> service,
-                           std::shared_ptr<core::IPrinter> printer,
-                           std::string address)
+                           std::shared_ptr<core::IPrinter> printer, std::string address)
     : _service(std::move(service)), _printer(printer), serverAddress(address)
 {
 }

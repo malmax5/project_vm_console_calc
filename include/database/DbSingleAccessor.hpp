@@ -8,10 +8,9 @@
 namespace app_calculator::database
 {
 
-template <typename TResult>
-class DbSingleAccessor : public core::IDbAccessor<TResult>
+template <typename TResult> class DbSingleAccessor : public core::IDbAccessor<TResult>
 {
-public:
+  public:
     explicit DbSingleAccessor(std::shared_ptr<core::IDbConnection<TResult>> dbConnection);
 
     ~DbSingleAccessor() override = default;
@@ -22,9 +21,10 @@ public:
     DbSingleAccessor &operator=(DbSingleAccessor &&) noexcept = default;
 
     TResult execute(const std::string &query) override;
-    TResult executeParams(const std::string &query, const std::vector<const char *> &params) override;
+    TResult executeParams(const std::string &query,
+                          const std::vector<const char *> &params) override;
 
-private:
+  private:
     std::shared_ptr<core::IDbConnection<TResult>> _dbConnection;
 };
 
@@ -34,19 +34,20 @@ namespace app_calculator::database
 {
 
 template <typename TResult>
-DbSingleAccessor<TResult>::DbSingleAccessor(std::shared_ptr<core::IDbConnection<TResult>> dbConnection)
-    :_dbConnection(std::move(dbConnection))
+DbSingleAccessor<TResult>::DbSingleAccessor(
+    std::shared_ptr<core::IDbConnection<TResult>> dbConnection)
+    : _dbConnection(std::move(dbConnection))
 {
 }
 
-template <typename TResult>
-TResult DbSingleAccessor<TResult>::execute(const std::string &query)
+template <typename TResult> TResult DbSingleAccessor<TResult>::execute(const std::string &query)
 {
     return _dbConnection->execute(query);
 }
 
 template <typename TResult>
-TResult DbSingleAccessor<TResult>::executeParams(const std::string &query, const std::vector<const char *> &params)
+TResult DbSingleAccessor<TResult>::executeParams(const std::string &query,
+                                                 const std::vector<const char *> &params)
 {
     return _dbConnection->executeParams(query, params);
 }

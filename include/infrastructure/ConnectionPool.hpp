@@ -2,19 +2,18 @@
 
 #include "core/Exceptions.hpp"
 
-#include <queue>
-#include <mutex>
 #include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <queue>
 #include <string>
 
 namespace app_calculator::infrastructure
 {
 
-template <typename TConnection>
-class ConnectionPool
+template <typename TConnection> class ConnectionPool
 {
-public:
+  public:
     ConnectionPool(const std::string &connInfo, size_t poolSize);
     ~ConnectionPool();
 
@@ -24,8 +23,8 @@ public:
     ConnectionPool &operator=(ConnectionPool &&) noexcept = default;
 
     std::shared_ptr<TConnection> acquire();
-    
-private:
+
+  private:
     void release(std::shared_ptr<TConnection> connection);
 
     std::queue<std::shared_ptr<TConnection>> _connections;
@@ -36,7 +35,7 @@ private:
 } // namespace app_calculator::infrastructure
 
 namespace app_calculator::infrastructure
-{   
+{
 
 template <typename TConnection>
 ConnectionPool<TConnection>::ConnectionPool(const std::string &connInfo, size_t poolSize)
@@ -47,19 +46,19 @@ ConnectionPool<TConnection>::ConnectionPool(const std::string &connInfo, size_t 
         {
             _connections.emplace(std::make_shared<TConnection>(connInfo));
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
-            throw exceptions::DatabaseException(std::string("Failed to create connection: ") + e.what());
+            throw exceptions::DatabaseException(std::string("Failed to create connection: ") +
+                                                e.what());
         }
-        catch(...)
+        catch (...)
         {
             throw exceptions::DatabaseException("Failed to create connection: Unknown error");
         }
     }
 }
 
-template <typename TConnection>
-ConnectionPool<TConnection>::~ConnectionPool()
+template <typename TConnection> ConnectionPool<TConnection>::~ConnectionPool()
 {
     std::lock_guard<std::mutex> lock(_mutex);
     while (!_connections.empty())
@@ -68,16 +67,16 @@ ConnectionPool<TConnection>::~ConnectionPool()
     }
 }
 
-template <typename TConnection>
-std::shared_ptr<TConnection> ConnectionPool<TConnection>::acquire()
+template <typename TConnection> std::shared_ptr<TConnection> ConnectionPool<TConnection>::acquire()
 {
     std::unique_lock<std::mutex> lock(_mutex);
-    _condition.wait(lock, [this](){ return !_connections.empty(); });
+    _condition.wait(lock, [this]() { return !_connections.empty(); });
 
     auto connection = _connections.front();
     _connections.pop();
 
-    return std::shared_ptr<TConnection>(connection.get(), [this, connection](TConnection*) { release(connection); });
+    return std::shared_ptr<TConnection>(connection.get(),
+                                        [this, connection](TConnection *) { release(connection); });
 }
 
 template <typename TConnection>
@@ -88,4 +87,4 @@ void ConnectionPool<TConnection>::release(std::shared_ptr<TConnection> connectio
     _condition.notify_one();
 }
 
-}
+} // namespace app_calculator::infrastructure

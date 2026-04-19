@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/IRepository.hpp"
 #include "core/IDbAccessor.hpp"
+#include "core/IRepository.hpp"
 #include "database/DbResult.hpp"
 #include "models/Calculation.hpp"
 
@@ -17,7 +17,7 @@ class HistoryRepository final : public core::IRepository<models::Calculation>
     std::vector<models::Calculation> getAll() const override;
     std::optional<int64_t> findResult(int64_t operandA, std::optional<int64_t> operandB,
                                       std::string_view operation) const override;
-  
+
   private:
     std::shared_ptr<core::IDbAccessor<database::DbResult>> _dbAccessor;
 };

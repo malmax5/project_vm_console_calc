@@ -12,8 +12,9 @@ namespace app_calculator::database
 template <typename TConnection, typename TResult>
 class DbPoolAccessor : public core::IDbAccessor<TResult>
 {
-public:
-    explicit DbPoolAccessor(std::shared_ptr<infrastructure::ConnectionPool<TConnection>> connectionPool);
+  public:
+    explicit DbPoolAccessor(
+        std::shared_ptr<infrastructure::ConnectionPool<TConnection>> connectionPool);
 
     ~DbPoolAccessor() override = default;
 
@@ -23,9 +24,10 @@ public:
     DbPoolAccessor &operator=(DbPoolAccessor &&) noexcept = default;
 
     TResult execute(const std::string &query) override;
-    TResult executeParams(const std::string &query, const std::vector<const char *> &params) override;
+    TResult executeParams(const std::string &query,
+                          const std::vector<const char *> &params) override;
 
-private:
+  private:
     std::shared_ptr<infrastructure::ConnectionPool<TConnection>> _connectionPool;
 };
 
@@ -35,7 +37,8 @@ namespace app_calculator::database
 {
 
 template <typename TConnection, typename TResult>
-DbPoolAccessor<TConnection, TResult>::DbPoolAccessor(std::shared_ptr<infrastructure::ConnectionPool<TConnection>> connectionPool)
+DbPoolAccessor<TConnection, TResult>::DbPoolAccessor(
+    std::shared_ptr<infrastructure::ConnectionPool<TConnection>> connectionPool)
     : _connectionPool(std::move(connectionPool))
 {
 }
@@ -48,7 +51,8 @@ TResult DbPoolAccessor<TConnection, TResult>::execute(const std::string &query)
 }
 
 template <typename TConnection, typename TResult>
-TResult DbPoolAccessor<TConnection, TResult>::executeParams(const std::string &query, const std::vector<const char *> &params)
+TResult DbPoolAccessor<TConnection, TResult>::executeParams(const std::string &query,
+                                                            const std::vector<const char *> &params)
 {
     auto connection = _connectionPool->acquire();
     return connection->executeParams(query, params);

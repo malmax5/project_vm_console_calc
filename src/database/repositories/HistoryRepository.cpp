@@ -3,9 +3,10 @@
 namespace app_calculator::database
 {
 
-HistoryRepository::HistoryRepository(std::shared_ptr<core::IDbAccessor<database::DbResult>> dbAccessor)
+HistoryRepository::HistoryRepository(
+    std::shared_ptr<core::IDbAccessor<database::DbResult>> dbAccessor)
     : _dbAccessor(dbAccessor)
-{   
+{
 }
 
 void HistoryRepository::add(const models::Calculation &item)
