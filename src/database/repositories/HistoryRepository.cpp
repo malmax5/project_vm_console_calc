@@ -74,6 +74,7 @@ std::optional<int64_t> HistoryRepository::findResult(int64_t operandA,
     std::string query;
     std::vector<const char *> params;
     std::string operandAStr = std::to_string(operandA);
+    std::string operandBStr;
     std::string operationStr(operation);
     std::string statusStr = std::to_string(static_cast<int>(models::OperationStatus::success));
 
@@ -84,7 +85,7 @@ std::optional<int64_t> HistoryRepository::findResult(int64_t operandA,
             WHERE operand_a = $1 AND operand_b = $2 AND operation = $3 AND status_id = $4
             ORDER BY created_at DESC LIMIT 1;)";
 
-        std::string operandBStr = std::to_string(*operandB);
+        operandBStr = std::to_string(*operandB);
         params = {operandAStr.c_str(), operandBStr.c_str(), operationStr.c_str(),
                   statusStr.c_str()};
     }
