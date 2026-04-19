@@ -37,10 +37,13 @@ void runClient(const std::string &operation, const std::vector<long long> &opera
     else if (expectOk)
     {
         EXPECT_TRUE(status.ok());
+        EXPECT_EQ(response.error_code(), app_calculator::grpc::ErrorCode::OK);
     }
     else
     {
-        EXPECT_FALSE(status.ok());
+        EXPECT_TRUE(status.ok());
+        EXPECT_NE(response.error_code(), app_calculator::grpc::ErrorCode::OK);
+        EXPECT_FALSE(response.error_message().empty());
     }
 }
 

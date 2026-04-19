@@ -2,6 +2,7 @@
 
 #include "core/Exceptions.hpp"
 #include "models/CalculationTask.hpp"
+#include "utils/ErrorCodeUtils.hpp"
 #include "utils/GrpcUtils.hpp"
 
 #include <chrono>
@@ -61,15 +62,26 @@ void ClientRunner::run()
 
         if (status.ok())
         {
-            _printer->printInfo("[Client] Result: " + std::to_string(response.result()));
-            _printer->printInfo("[Client] Status: " + response.status());
+            if (response.error_code() == ::app_calculator::grpc::ErrorCode::OK)
+            {
+                _printer->printInfo("[Client] Result: " + std::to_string(response.result()));
+                _printer->printInfo("[Client] Status: " + response.status());
+            }
+            else
+            {
+                _printer->printError(
+                    std::string("[Client] Error: code=") +
+                    std::to_string(response.error_code()) +
+                    ", name=" + app_calculator::utils::network_utils::errorCodeToString(response.error_code()) +
+                    ", message=" + response.error_message());
+            }
         }
         else
         {
             _printer->printError(
                 std::string("[Client] RPC failed: code=") +
                 std::to_string(static_cast<int>(status.error_code())) +
-                ", name=" + utils::newtwork_utils::grpcStatusCodeToString(status.error_code()) +
+                ", name=" + app_calculator::utils::network_utils::grpcStatusCodeToString(status.error_code()) +
                 ", message=" + status.error_message());
 
             throw exceptions::GrpcException(status.error_message());
@@ -81,6 +93,7 @@ void ClientRunner::run()
         {
             _printer->printError(e.what());
         }
+        
         throw;
     }
     catch (const std::exception &e)
@@ -89,6 +102,7 @@ void ClientRunner::run()
         {
             _printer->printError(std::string("Unexpected error: ") + e.what());
         }
+
         throw exceptions::NetworkException("ClientRunner encountered an error: " +
                                            std::string(e.what()));
     }
@@ -98,6 +112,7 @@ void ClientRunner::run()
         {
             _printer->printError("An unknown error occurred in ClientRunner.");
         }
+
         throw exceptions::NetworkException("ClientRunner encountered an unknown error.");
     }
 }

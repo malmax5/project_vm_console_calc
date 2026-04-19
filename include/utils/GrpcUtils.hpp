@@ -1,7 +1,7 @@
 #include <grpcpp/support/status_code_enum.h>
 #include <string>
 
-namespace app_calculator::utils::newtwork_utils
+namespace app_calculator::utils::network_utils
 {
 
 inline std::string grpcStatusCodeToString(::grpc::StatusCode code)
@@ -47,4 +47,4 @@ inline std::string grpcStatusCodeToString(::grpc::StatusCode code)
     }
 }
 
-} // namespace app_calculator::utils::newtwork_utils
+} // namespace app_calculator::utils::network_utils

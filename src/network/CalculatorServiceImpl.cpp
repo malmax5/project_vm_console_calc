@@ -2,6 +2,7 @@
 
 #include "core/Exceptions.hpp"
 #include "models/CalculationTask.hpp"
+#include "utils/ErrorCodeUtils.hpp"
 
 #include <vector>
 
@@ -22,7 +23,6 @@ CalculatorServiceImpl::Calculate(::grpc::ServerContext *context,
 {
     try
     {
-
         std::string operation = request->operation();
         std::vector<long long> operands(request->operands().begin(), request->operands().end());
 
@@ -35,29 +35,26 @@ CalculatorServiceImpl::Calculate(::grpc::ServerContext *context,
         long long result = _calculator->calculate(task);
 
         response->set_result(result);
+        response->set_error_code(::app_calculator::grpc::ErrorCode::OK);
+        response->set_error_message("");
         response->set_status("Success");
 
         return ::grpc::Status::OK;
     }
-    catch (const exceptions::ValidationException &validationException)
+    catch (const std::exception &ex)
     {
-        response->set_status(std::string("Validation error: ") + validationException.what());
-        return ::grpc::Status(::grpc::StatusCode::INVALID_ARGUMENT, validationException.what());
-    }
-    catch (const exceptions::CalculationException &calculationException)
-    {
-        response->set_status(std::string("Calculation error: ") + calculationException.what());
-        return ::grpc::Status(::grpc::StatusCode::FAILED_PRECONDITION, calculationException.what());
-    }
-    catch (const std::exception &exception)
-    {
-        response->set_status(std::string("Error: ") + exception.what());
-        return ::grpc::Status(::grpc::StatusCode::INTERNAL, exception.what());
+        auto code = app_calculator::utils::network_utils::exceptionToErrorCode(ex);
+        response->set_error_code(code);
+        response->set_error_message(ex.what());
+        response->set_status(std::string("Error: ") + ex.what());
+        return ::grpc::Status::OK;
     }
     catch (...)
     {
-        response->set_status("Unknown error occurred.");
-        return ::grpc::Status(::grpc::StatusCode::UNKNOWN, "Unknown error occurred.");
+        response->set_error_code(app_calculator::grpc::ErrorCode::INTERNAL_ERROR);
+        response->set_error_message("An unknown error occurred.");
+        response->set_status("Error: An unknown error occurred.");
+        return ::grpc::Status::OK;
     }
 }
 
