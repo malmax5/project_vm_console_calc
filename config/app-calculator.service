@@ -1,0 +1,13 @@
+[Unit]
+Description=C++ Calculator gRPC Service
+After=network.target postgresql.service
+
+[Service]
+ExecStart=/usr/bin/calculator --server
+Restart=on-failure
+User=root
+StandardOutput=append:/var/log/app_calculator.log
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target

@@ -1,8 +1,9 @@
 #include "application/CalculatorApp.hpp"
 
-#include "infrastructure/ComponentFactory.hpp"
-#include "runner/Runner.hpp"
+#include "application/CLIOptions.hpp"
 #include "core/Exceptions.hpp"
+#include "infrastructure/ComponentFactory.hpp"
+#include "infrastructure/RunnerFactory.hpp"
 
 #include <filesystem>
 
@@ -13,17 +14,67 @@ void CalculatorApp::run(int argc, char **argv)
 {
     try
     {
-        std::string configPath = getResourcePath(argv[0]);
-        auto components = infrastructure::ComponentFactory::createProductionComponents(configPath);
-        _printer = components.printer;
+        CLIOptions options = CLIOptions::parse(argc, argv);
+
+        if (options.configPath.empty())
+        {
+            std::string configPath = getResourcePath(argv[0]);
+            options.configPath = configPath;
+        }
+
+        {
+            auto components = infrastructure::ComponentFactory::createApplicationContext();
+            _printer = components.printer;
+        }
 
         _printer->printInfo("Application started");
-        _printer->printInfo("Target config path: " + configPath);
 
-        runner::Runner runner(std::move(components.parser), std::move(components.checker),
-                              std::move(components.calculator), components.printer);
+        std::unique_ptr<core::IRunner> runner;
+        switch (options.mode)
+        {
+        case AppMode::server:
+            _printer->printInfo("Mode: SERVER");
+            {
+                infrastructure::ServerRunnerDeps deps =
+                    infrastructure::ComponentFactory::createServerRunnerComponents(options);
+                runner = infrastructure::RunnerFactory::createServerRunner(deps);
+            }
+            break;
+        case AppMode::console:
+            _printer->printInfo("Mode: CONSOLE");
+            {
+                infrastructure::ConsoleRunnerDeps deps =
+                    infrastructure::ComponentFactory::createConsoleRunnerComponents(options);
+                runner = infrastructure::RunnerFactory::createConsoleRunner(deps);
+            }
+            break;
+        case AppMode::client:
+            _printer->printInfo("Mode: CLIENT");
+            {
+                infrastructure::ClientRunnerDeps deps =
+                    infrastructure::ComponentFactory::createClientRunnerComponents(options);
+                runner = infrastructure::RunnerFactory::createClientRunner(deps);
+            }
+            break;
+        default:
+            throw exceptions::ConfigException(
+                "Invalid mode specified. Use --server, --console, or --client.");
+        }
 
-        runner.run(argc, argv);
+        runner->run();
+    }
+    catch (const exceptions::NetworkException &e)
+    {
+        return;
+    }
+    catch (const exceptions::AppException &e)
+    {
+        if (_printer)
+        {
+            _printer->printError("Application error: " + std::string(e.what()));
+        }
+
+        return;
     }
     catch (const std::exception &e)
     {
@@ -32,7 +83,7 @@ void CalculatorApp::run(int argc, char **argv)
             _printer->printError("Initialization failed: " + std::string(e.what()));
         }
 
-        throw;
+        return;
     }
     catch (...)
     {
@@ -41,20 +92,20 @@ void CalculatorApp::run(int argc, char **argv)
             _printer->printError("Initialization failed: Unknown error");
         }
 
-        throw;
+        return;
     }
 }
 
 std::string CalculatorApp::getResourcePath(const char *executablePath)
 {
-    const std::string sysConfigPath = "/etc/calculator/config.json";
+    const std::string sysConfigPath = core::configPath;
     if (std::filesystem::exists(sysConfigPath))
     {
         try
         {
             return std::filesystem::canonical(sysConfigPath).string();
         }
-        catch (const std::filesystem::filesystem_error&)
+        catch (const std::filesystem::filesystem_error &)
         {
             return sysConfigPath;
         }

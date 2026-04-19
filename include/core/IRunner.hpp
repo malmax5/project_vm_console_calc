@@ -14,7 +14,7 @@ class IRunner
     IRunner(IRunner &&) noexcept = default;
     IRunner &operator=(IRunner &&) noexcept = default;
 
-    virtual void run(int argc, char **argv) = 0;
+    virtual void run() = 0;
 };
 
 } // namespace app_calculator::core

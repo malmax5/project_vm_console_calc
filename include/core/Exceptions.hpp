@@ -112,4 +112,41 @@ class ConfigException : public AppException
     }
 };
 
+class NetworkException : public AppException
+{
+  public:
+    NetworkException() : AppException("Network Error: Unknown issue.")
+    {
+    }
+
+    explicit NetworkException(const std::string &msg) : AppException("Network Error: " + msg)
+    {
+    }
+};
+
+class GrpcException : public NetworkException
+{
+  public:
+    GrpcException() : NetworkException("gRPC Error: Unknown issue.")
+    {
+    }
+
+    explicit GrpcException(const std::string &msg) : NetworkException("gRPC Error: " + msg)
+    {
+    }
+};
+
+class NetworkTimeoutException : public NetworkException
+{
+  public:
+    NetworkTimeoutException() : NetworkException("Network Timeout: Unknown issue.")
+    {
+    }
+
+    explicit NetworkTimeoutException(const std::string &msg)
+        : NetworkException("Network Timeout: " + msg)
+    {
+    }
+};
+
 } // namespace app_calculator::exceptions

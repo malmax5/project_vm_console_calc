@@ -4,9 +4,38 @@ project(ConsoleCalc LANGUAGES CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 
+option(USE_THREAD_SANITIZER "Enable ThreadSanitizer" OFF)
+option(USE_ADDRESS_SANITIZER "Enable AddressSanitizer" OFF)
+
+if(USE_THREAD_SANITIZER AND USE_ADDRESS_SANITIZER)
+    message(FATAL_ERROR "Cannot enable both ThreadSanitizer and AddressSanitizer at the same time!")
+endif()
+
+if(USE_THREAD_SANITIZER)
+    add_compile_options(-fsanitize=thread)
+    add_link_options(-fsanitize=thread)
+    message(STATUS "ThreadSanitizer enabled")
+elseif(USE_ADDRESS_SANITIZER)
+    add_compile_options(-fsanitize=address)
+    add_link_options(-fsanitize=address)
+    message(STATUS "AddressSanitizer enabled")
+endif()
+
 include(FetchContent)
 
+set(SKIP_INSTALL_ALL ON)
+set(FMT_INSTALL OFF CACHE BOOL "" FORCE)
+set(SPDLOG_INSTALL OFF CACHE BOOL "" FORCE)
+set(JSON_INSTALL OFF CACHE BOOL "" FORCE)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+
 find_package(PostgreSQL REQUIRED)
+find_package(Protobuf REQUIRED)
+find_package(gRPC REQUIRED)
+
+find_program(_PROTOBUF_PROTOC protoc)
+find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
 
 FetchContent_Declare(
     pvm_math_lib
@@ -40,6 +69,37 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(pvm_math_lib spdlog json fmt googletest)
 
+set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
+set(PROTO_FILE "${CMAKE_CURRENT_SOURCE_DIR}/proto/calculator.proto")
+set(GENERATED_PROTO_SRCS "${PROTO_GEN_DIR}/calculator.pb.cc")
+set(GENERATED_PROTO_HDRS "${PROTO_GEN_DIR}/calculator.pb.h")
+set(GENERATED_GRPC_SRCS "${PROTO_GEN_DIR}/calculator.grpc.pb.cc")
+set(GENERATED_GRPC_HDRS "${PROTO_GEN_DIR}/calculator.grpc.pb.h")
+
+add_custom_command(
+    OUTPUT ${GENERATED_PROTO_SRCS} ${GENERATED_PROTO_HDRS} ${GENERATED_GRPC_SRCS} ${GENERATED_GRPC_HDRS}
+    COMMAND ${_PROTOBUF_PROTOC} --cpp_out=${PROTO_GEN_DIR} --grpc_out=${PROTO_GEN_DIR} --plugin=protoc-gen-grpc=${_GRPC_CPP_PLUGIN_EXECUTABLE} -I ${CMAKE_CURRENT_SOURCE_DIR}/proto ${PROTO_FILE}
+    DEPENDS ${PROTO_FILE}
+    COMMENT "Generating protobuf and gRPC code from ${PROTO_FILE}"
+)
+
+add_library(calc_grpc_proto STATIC
+    ${GENERATED_PROTO_SRCS}
+    ${GENERATED_GRPC_SRCS}
+)
+
+target_include_directories(calc_grpc_proto PUBLIC
+    ${PROTO_GEN_DIR}
+    ${Protobuf_INCLUDE_DIRS}
+    ${gRPC_INCLUDE_DIRS}
+)
+target_link_libraries(calc_grpc_proto PUBLIC
+    gRPC::grpc++
+    gRPC::grpc++_reflection
+    protobuf::libprotobuf
+)
+
 add_library(app_logic STATIC
     src/logger/Logger.cpp
     src/parser/JsonParser.cpp
@@ -47,16 +107,24 @@ add_library(app_logic STATIC
     src/calculator/Calculator.cpp
     src/calculator/CachedCalculator.cpp
     src/printer/Printer.cpp
-    src/runner/Runner.cpp
+    src/runner/ConsoleRunner.cpp
+    src/runner/ServerRunner.cpp
+    src/runner/ClientRunner.cpp
     src/models/DbConfig.cpp
-    src/infrastructure/ConfigLoader.cpp
+    src/infrastructure/AppContext.cpp
     src/infrastructure/ComponentFactory.cpp
+    src/infrastructure/ConfigLoader.cpp
+    src/infrastructure/RunnerDeps.cpp
+    src/infrastructure/RunnerFactory.cpp
+    src/infrastructure/ConnectionPool.cpp
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
     src/database/repositories/HistoryRepository.cpp
     src/database/repositories/CachedHistoryRepository.cpp
+    src/network/CalculatorServiceImpl.cpp
     src/utils/OperationUtils.cpp
     src/application/CalculatorApp.cpp
+    src/application/CLIOptions.cpp
 )
 
 target_include_directories(app_logic PUBLIC
@@ -70,6 +138,7 @@ target_link_libraries(app_logic PRIVATE
     nlohmann_json::nlohmann_json
     PostgreSQL::PostgreSQL
     fmt::fmt
+    calc_grpc_proto
 )
 
 add_executable(calculator src/main.cpp)
@@ -106,9 +175,13 @@ if(BUILD_TESTING)
         tests/test_checker.cpp
         tests/test_parser.cpp
         tests/test_calculator.cpp
+        tests/test_client.cpp
     )
 
-    target_include_directories(unit_tests PRIVATE include)
+    target_include_directories(unit_tests PRIVATE
+        include
+        ${CMAKE_CURRENT_BINARY_DIR}/generated
+    )
     target_link_libraries(unit_tests PRIVATE
         app_logic
         pvm_math_lib
@@ -139,10 +212,24 @@ else()
 endif()
 
 include(GNUInstallDirs)
-install(TARGETS calculator
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-)
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(TARGETS calculator RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES config/config.json DESTINATION /etc/calculator)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/config/app-calculator.service DESTINATION /lib/systemd/system)
+install(DIRECTORY DESTINATION var/log)
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_NAME "app-calculator")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_RELEASE "1")
+set(CPACK_PACKAGE_CONTACT "Author <pochta@gmail.com>")
+set(CPACK_PACKAGE_DESCRIPTION "gRPC Calculator Service")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libgrpc++-dev, libprotobuf32t64, libstdc++6")
+
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "")
+
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+
+include(CPack)

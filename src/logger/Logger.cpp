@@ -1,7 +1,8 @@
 #include "logger/Logger.hpp"
 
-#include <filesystem>
+#include "core/Constants.hpp"
 
+#include <filesystem>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
@@ -18,14 +19,14 @@ struct Logger::Impl
 
     Impl()
     {
-        std::filesystem::create_directories("logs");
+        std::filesystem::create_directories(core::logDir);
 
         auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         consoleSink->set_level(spdlog::level::trace);
         consoleSink->set_pattern("[%^%l%$] %v");
 
         auto fileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
-            "logs/calculator.log", maxLogFileSize, maxLogFiles);
+            core::logFile, maxLogFileSize, maxLogFiles);
         fileSink->set_level(spdlog::level::trace);
         fileSink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] %v");
 

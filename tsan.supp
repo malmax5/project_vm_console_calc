@@ -1,0 +1,11 @@
+race:absl::*
+
+race:grpc_*
+race:grpc_core::*
+race:grpc_event_engine::*
+
+race:libgrpc.so*
+race:libgpr.so*
+race:libabsl_*.so*
+
+race:std::*

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package app_calculator.grpc;
+
+enum ErrorCode {
+    OK = 0;
+    VALIDATION_ERROR = 1;
+    CALCULATION_ERROR = 2;
+    DB_ERROR = 3;
+    CONFIG_ERROR = 4;
+    NETWORK_ERROR = 5;
+    INTERNAL_ERROR = 6;
+}
+
+message CalculationRequest {
+    string operation = 1;
+    repeated int64 operands = 2;
+}
+
+message CalculationResponse {
+    int64 result = 1;
+    ErrorCode error_code = 2;
+    string error_message = 3;
+    string status = 4;
+}
+
+service CalculatorService {
+    rpc Calculate (CalculationRequest) returns (CalculationResponse);
+}

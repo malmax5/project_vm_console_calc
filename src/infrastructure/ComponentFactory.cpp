@@ -3,39 +3,106 @@
 #include "calculator/CachedCalculator.hpp"
 #include "calculator/Calculator.hpp"
 #include "checker/Checker.hpp"
+#include "database/DbPoolAccessor.hpp"
+#include "database/DbSingleAccessor.hpp"
 #include "database/PostgresConnection.hpp"
 #include "database/repositories/CachedHistoryRepository.hpp"
 #include "database/repositories/HistoryRepository.hpp"
 #include "infrastructure/ConfigLoader.hpp"
+#include "infrastructure/ConnectionPool.hpp"
 #include "logger/Logger.hpp"
 #include "models/DbConfig.hpp"
+#include "network/CalculatorServiceImpl.hpp"
 #include "parser/JsonParser.hpp"
 #include "printer/Printer.hpp"
+
+#include <grpcpp/grpcpp.h>
 
 namespace app_calculator::infrastructure
 {
 
-AppComponents ComponentFactory::createProductionComponents(const std::string &configPath)
+AppContext ComponentFactory::createApplicationContext()
 {
+    AppContext context;
+
+    context.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
+
+    return context;
+}
+
+ConsoleRunnerDeps ComponentFactory::createConsoleRunnerComponents(const CLIOptions &options)
+{
+    ConsoleRunnerDeps deps;
+
     models::DbConfig config =
-        infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(configPath);
+        infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(options.configPath);
 
     auto dbConnection = std::make_shared<database::PostgresConnection>(config.connectionString());
-    auto historyRepository = std::make_unique<database::HistoryRepository>(dbConnection);
+    auto dbAccessor =
+        std::make_shared<database::DbSingleAccessor<database::DbResult>>(dbConnection);
+    auto historyRepository = std::make_unique<database::HistoryRepository>(dbAccessor);
 
     auto baseCalculator = std::make_unique<calculator::Calculator>();
 
-    AppComponents components;
-    components.parser = std::make_unique<parser::JsonParser>();
-    components.checker = std::make_unique<checker::Checker>();
-    components.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
-
+    deps.parser = std::make_unique<parser::JsonParser>();
+    deps.checker = std::make_unique<checker::Checker>();
+    deps.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
     auto cachedRepository = std::make_shared<database::CachedHistoryRepository>(
-        std::move(historyRepository), components.printer);
-    components.calculator =
+        std::move(historyRepository), deps.printer);
+    deps.calculator =
         std::make_unique<calculator::CachedCalculator>(std::move(baseCalculator), cachedRepository);
+    deps.inputJson = options.inputJson;
 
-    return components;
+    return deps;
+}
+
+ServerRunnerDeps ComponentFactory::createServerRunnerComponents(const CLIOptions &options)
+{
+    ServerRunnerDeps deps;
+
+    if (!options.address.empty())
+    {
+        deps.address = options.address;
+    }
+
+    models::DbConfig config =
+        infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(options.configPath);
+
+    auto connectionPool =
+        std::make_shared<infrastructure::ConnectionPool<database::PostgresConnection>>(
+            config.connectionString(), config.poolSize);
+    auto dbAccessor = std::make_shared<
+        database::DbPoolAccessor<database::PostgresConnection, database::DbResult>>(connectionPool);
+    auto historyRepository = std::make_unique<database::HistoryRepository>(dbAccessor);
+
+    auto baseCalculator = std::make_unique<calculator::Calculator>();
+
+    deps.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
+    auto cachedRepository = std::make_shared<database::CachedHistoryRepository>(
+        std::move(historyRepository), deps.printer);
+    deps.calculator =
+        std::make_unique<calculator::CachedCalculator>(std::move(baseCalculator), cachedRepository);
+    deps.checker = std::make_unique<checker::Checker>();
+
+    return deps;
+}
+
+ClientRunnerDeps ComponentFactory::createClientRunnerComponents(const CLIOptions &options)
+{
+    ClientRunnerDeps deps;
+
+    if (!options.address.empty())
+    {
+        deps.address = options.address;
+    }
+
+    deps.printer = std::make_shared<printer::Printer>(logger::Logger::instance());
+    deps.parser = std::make_unique<parser::JsonParser>();
+    deps.inputJson = options.inputJson;
+    deps.address = options.address;
+    deps.timeoutMs = options.timeoutMs;
+
+    return deps;
 }
 
 } // namespace app_calculator::infrastructure
