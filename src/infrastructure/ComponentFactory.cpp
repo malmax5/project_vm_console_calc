@@ -4,9 +4,12 @@
 #include "calculator/Calculator.hpp"
 #include "checker/Checker.hpp"
 #include "database/PostgresConnection.hpp"
+#include "database/DbPoolAccessor.hpp"
+#include "database/DbSingleAccessor.hpp"
 #include "database/repositories/CachedHistoryRepository.hpp"
 #include "database/repositories/HistoryRepository.hpp"
 #include "infrastructure/ConfigLoader.hpp"
+#include "infrastructure/ConnectionPool.hpp"
 #include "logger/Logger.hpp"
 #include "models/DbConfig.hpp"
 #include "network/CalculatorServiceImpl.hpp"
@@ -35,7 +38,8 @@ ConsoleRunnerDeps ComponentFactory::createConsoleRunnerComponents(const CLIOptio
         infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(options.configPath);
 
     auto dbConnection = std::make_shared<database::PostgresConnection>(config.connectionString());
-    auto historyRepository = std::make_unique<database::HistoryRepository>(dbConnection);
+    auto dbAccessor = std::make_shared<database::DbSingleAccessor<database::DbResult>>(dbConnection);
+    auto historyRepository = std::make_unique<database::HistoryRepository>(dbAccessor);
 
     auto baseCalculator = std::make_unique<calculator::Calculator>();
 
@@ -63,8 +67,9 @@ ServerRunnerDeps ComponentFactory::createServerRunnerComponents(const CLIOptions
     models::DbConfig config =
         infrastructure::ConfigLoader::loadFromFile<models::DbConfig>(options.configPath);
 
-    auto dbConnection = std::make_shared<database::PostgresConnection>(config.connectionString());
-    auto historyRepository = std::make_unique<database::HistoryRepository>(dbConnection);
+    auto connectionPool = std::make_shared<infrastructure::ConnectionPool<database::PostgresConnection>>(config.connectionString(), config.poolSize);
+    auto dbAccessor = std::make_shared<database::DbPoolAccessor<database::PostgresConnection, database::DbResult>>(connectionPool);
+    auto historyRepository = std::make_unique<database::HistoryRepository>(dbAccessor);
 
     auto baseCalculator = std::make_unique<calculator::Calculator>();
 

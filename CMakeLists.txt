@@ -99,6 +99,7 @@ add_library(app_logic STATIC
     src/infrastructure/ConfigLoader.cpp
     src/infrastructure/RunnerDeps.cpp
     src/infrastructure/RunnerFactory.cpp
+    src/infrastructure/ConnectionPool.cpp
     src/database/DbResult.cpp
     src/database/PostgresConnection.cpp
     src/database/repositories/HistoryRepository.cpp
@@ -157,9 +158,13 @@ if(BUILD_TESTING)
         tests/test_checker.cpp
         tests/test_parser.cpp
         tests/test_calculator.cpp
+        tests/test_client.cpp
     )
 
-    target_include_directories(unit_tests PRIVATE include)
+    target_include_directories(unit_tests PRIVATE
+        include
+        ${CMAKE_CURRENT_BINARY_DIR}/generated
+    )
     target_link_libraries(unit_tests PRIVATE
         app_logic
         pvm_math_lib

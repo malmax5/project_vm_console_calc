@@ -11,12 +11,15 @@ struct DbConfig
 {
   public:
     static constexpr int defaultPostgresPort = 5432;
+    static constexpr int defaultPoolSize = 10;
 
     std::string host;
     int port{defaultPostgresPort};
     std::string dbname;
     std::string user;
     std::string password;
+
+    int poolSize{defaultPoolSize};
 
     std::string connectionString() const
     {
