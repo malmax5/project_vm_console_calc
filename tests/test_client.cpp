@@ -28,11 +28,6 @@ void runClient(const std::string& operation, const std::vector<long long>& opera
 
     ::grpc::Status status = stub.Calculate(&context, request, &response);
 
-    if (!status.ok() && !expectTimeout)
-    {
-        std::cerr << "RPC failed: " << status.error_message() << std::endl;
-    }
-
     if (expectTimeout)
     {
         EXPECT_EQ(status.error_code(), grpc::StatusCode::DEADLINE_EXCEEDED);
@@ -73,9 +68,11 @@ TEST(CalculatorGrpcTest, HughLoadTest)
     std::vector<std::thread> clientThreads;
     std::string address = "0.0.0.0:50051";
 
+    int aArg = 1;
+    int bArg = 2;
     for (size_t i = 0; i < 100; ++i)
     {
-        clientThreads.emplace_back(runClient, "sum", std::vector<long long>{i, i * 2}, address, true, false);
+        clientThreads.emplace_back(runClient, "sum", std::vector<long long>{aArg++, bArg++}, address, true, false);
     }
 
     for (auto& thread : clientThreads)
